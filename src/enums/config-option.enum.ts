@@ -1,0 +1,13 @@
+export enum ConfigOption {
+  // SYSTEM
+  NODE_ENV = 'NODE_ENV',
+
+  // TYPEORM
+  TYPEORM_URL = 'TYPEORM_URL',
+
+  // ENCRYPTION
+  ENCRYPTION_SALT_ROUNDS = 'ENCRYPTION_SALT_ROUNDS',
+
+  // Pino Logger
+  PINO_LOG_LEVEL = 'PINO_LOG_LEVEL',
+}
