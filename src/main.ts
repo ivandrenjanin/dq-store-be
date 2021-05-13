@@ -7,8 +7,8 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   const config = new DocumentBuilder()
-    .setTitle('Talent/OS')
-    .setDescription('The Talent/OS API description')
+    .setTitle('D/Q Storehouse')
+    .setDescription('The D/Q Storehouse API description')
     .setVersion('1.0')
     .build();
 

@@ -1,31 +1,15 @@
 import { Exclude } from 'class-transformer';
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  Generated,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+import { Column, Entity, OneToMany } from 'typeorm';
 
 import { ApiProperty } from '@nestjs/swagger';
 
-@Entity()
-export class User {
-  @Exclude()
-  @ApiProperty()
-  @PrimaryGeneratedColumn()
-  public readonly id!: number;
+import { Entities } from './enum/entity.enum';
+import { UserRole } from './user-role.entity';
+import { CompanyUser } from './company-user.entity';
+import { BaseEntity } from './base';
 
-  @ApiProperty()
-  @Column({
-    name: 'public_id',
-    unique: true,
-    type: 'uuid',
-  })
-  @Generated('uuid')
-  public publicId!: string;
-
+@Entity({ name: 'user' })
+export class User extends BaseEntity {
   @ApiProperty()
   @Column({
     name: 'email',
@@ -63,17 +47,11 @@ export class User {
   })
   public isActive!: boolean;
 
-  @ApiProperty()
-  @CreateDateColumn({
-    name: 'created_at',
-    type: 'timestamp without time zone',
+  @OneToMany(Entities.USER_ROLE, 'user', {
+    eager: true,
   })
-  public createdAt!: Date;
+  public roles!: UserRole[];
 
-  @ApiProperty()
-  @UpdateDateColumn({
-    name: 'updated_at',
-    type: 'timestamp without time zone',
-  })
-  public updatedAt!: Date;
+  @OneToMany(Entities.COMPANY_USER, 'user')
+  public companyUsers!: CompanyUser[];
 }

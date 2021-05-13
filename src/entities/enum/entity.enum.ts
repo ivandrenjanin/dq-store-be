@@ -1,0 +1,15 @@
+export enum Entities {
+  USER = 'User',
+  ROLE = 'Role',
+  USER_ROLE = 'UserRole',
+  COMPANY = 'Company',
+  COMPANY_CLIENT = 'CompanyClient',
+  COMPANY_USER = 'CompanyUser',
+  INVENTORY = 'Inventory',
+  CATEGORY = 'Category',
+  ORDER = 'Order',
+  PRODUCT = 'Product',
+  PRODUCT_DETAILS = 'ProductDetails',
+  PRODUCT_CATEGORY = 'ProductCategory',
+  PRODUCT_ORDER = 'ProductOrder',
+}
