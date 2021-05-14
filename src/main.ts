@@ -10,6 +10,7 @@ async function bootstrap() {
     .setTitle('D/Q Storehouse')
     .setDescription('The D/Q Storehouse API description')
     .setVersion('1.0')
+    .addBearerAuth()
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
@@ -17,4 +18,5 @@ async function bootstrap() {
 
   await app.listen(3000);
 }
+
 bootstrap();
