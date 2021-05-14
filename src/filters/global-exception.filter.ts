@@ -1,5 +1,3 @@
-import { PinoLogger } from 'nestjs-pino';
-
 import {
   ArgumentsHost,
   Catch,
@@ -10,8 +8,6 @@ import {
 
 @Catch()
 export class GlobalExceptionFilter implements ExceptionFilter {
-  constructor(private readonly logger: PinoLogger) {}
-
   public catch(exception: unknown, host: ArgumentsHost): void {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse();

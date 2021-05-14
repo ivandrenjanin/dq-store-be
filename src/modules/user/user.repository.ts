@@ -10,10 +10,7 @@ import { UserRole } from '../../entities/user-role.entity';
 
 @EntityRepository()
 export class UserRepository {
-  constructor(
-    private readonly entityManager: EntityManager,
-    private readonly logger: PinoLogger,
-  ) {}
+  constructor(private readonly entityManager: EntityManager) {}
 
   public async insertUser(dto: CreateUserDto): Promise<User> {
     try {
@@ -41,7 +38,6 @@ export class UserRepository {
         return user;
       });
     } catch (error) {
-      this.logger.error(error);
       throw new UnprocessableEntityException();
     }
   }

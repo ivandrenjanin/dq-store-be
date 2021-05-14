@@ -23,7 +23,6 @@ export class AuthService {
       dto.email.toLowerCase(),
     );
 
-    console.log(identity);
     if (!identity || !identity.password) {
       throw new UnauthorizedException();
     }

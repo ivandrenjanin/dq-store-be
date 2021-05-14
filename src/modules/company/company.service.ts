@@ -1,6 +1,9 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { ForbiddenException, Inject, Injectable } from '@nestjs/common';
+import { Company } from '../../entities/company.entity';
+import { User } from '../../entities/user.entity';
 
 import { CompanyRepository } from './company.repository';
+import { CreateCompanyDto } from './dto/create-company.dto';
 
 @Injectable()
 export class CompanyService {
@@ -8,4 +11,21 @@ export class CompanyService {
     @Inject('COMPANY_REPOSITORY')
     private readonly repository: CompanyRepository,
   ) {}
+
+  public async createCompany(
+    dto: CreateCompanyDto,
+    identity: User,
+  ): Promise<Company> {
+    const existingCompany = await this.repository.findCompanyByUserId(
+      identity.id,
+    );
+
+    if (existingCompany) {
+      throw new ForbiddenException();
+    }
+
+    const company = await this.repository.insertCompany(dto, identity);
+
+    return company;
+  }
 }
