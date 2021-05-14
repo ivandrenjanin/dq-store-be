@@ -10,4 +10,8 @@ export enum ConfigOption {
 
   // Pino Logger
   PINO_LOG_LEVEL = 'PINO_LOG_LEVEL',
+
+  // JWT
+  JWT_SECRET_KEY = 'JWT_SECRET_KEY',
+  JWT_EXPIRATION_TIME = 'JWT_EXPIRATION_TIME',
 }

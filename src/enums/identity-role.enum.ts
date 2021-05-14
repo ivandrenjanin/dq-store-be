@@ -1,0 +1,6 @@
+export enum IdentityPermissionRole {
+  SUPER_ADMIN = 'SUPER_ADMIN',
+  ADMIN = 'ADMIN',
+  COMPANY_ADMIN = 'COMPANY_ADMIN',
+  COMPANY_MEMBER = 'COMPANY_MEMBER',
+}
