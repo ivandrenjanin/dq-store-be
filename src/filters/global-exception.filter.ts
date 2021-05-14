@@ -37,7 +37,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
       timestamp: new Date().toISOString(),
     };
 
-    this.logger.error(error);
+    // this.logger.error(error);
 
     response.status(status).json(error);
   }
