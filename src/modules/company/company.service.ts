@@ -9,6 +9,7 @@ import { User } from '../../entities/user.entity';
 
 import { CompanyRepository } from './company.repository';
 import { CreateCompanyDto } from './dto/create-company.dto';
+import { UpdateCompanyDto } from './dto/update-company.dto';
 
 @Injectable()
 export class CompanyService {
@@ -42,5 +43,30 @@ export class CompanyService {
     }
 
     return company;
+  }
+
+  public async updateCompanyById(
+    publicId: string,
+    dto: UpdateCompanyDto,
+    identity: User,
+  ) {
+    const existingCompany = await this.repository.findCompanyByUserId(
+      identity.id,
+    );
+
+    if (!existingCompany) {
+      throw new NotFoundException();
+    }
+
+    if (existingCompany.publicId !== publicId) {
+      throw new ForbiddenException();
+    }
+
+    const updatedCompany = await this.repository.updateCompanyById(
+      publicId,
+      dto,
+    );
+
+    return updatedCompany;
   }
 }

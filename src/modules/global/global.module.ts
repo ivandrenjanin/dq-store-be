@@ -37,8 +37,10 @@ import { GlobalController } from './global.controller';
         skipNullProperties: false,
         skipUndefinedProperties: false,
         validationError: {
-          target: true /** Indicates if target should be exposed in ValidationError. */,
-          value: true /** Indicates if validated value should be exposed in ValidationError. */,
+          target:
+            true /** Indicates if target should be exposed in ValidationError. */,
+          value:
+            true /** Indicates if validated value should be exposed in ValidationError. */,
         },
       }),
     },

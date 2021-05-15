@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiBearerAuth, ApiCreatedResponse, ApiTags } from '@nestjs/swagger';
 import { GetIdentity } from '../../decorators/get-identity.decorator';
 import { AllowedRoles } from '../../decorators/set-allowed-roles.decorator';
@@ -10,6 +18,7 @@ import { JwtAuthGuard } from '../../guards/jwt-auth.guard';
 import { RolesGuard } from '../../guards/roles.guard';
 import { CompanyService } from './company.service';
 import { CreateCompanyDto } from './dto/create-company.dto';
+import { UpdateCompanyDto } from './dto/update-company.dto';
 
 @ApiTags('company')
 @ApiBearerAuth()
@@ -46,5 +55,22 @@ export class CompanyController {
   })
   public getCompanyByUserId(@GetIdentity() identity: User): Promise<Company> {
     return this.service.getCompanyByUserId(identity);
+  }
+
+  @Patch('/:publicId')
+  @AllowedRoles(
+    IdentityPermissionRole.SUPER_ADMIN,
+    IdentityPermissionRole.ADMIN,
+    IdentityPermissionRole.COMPANY_ADMIN,
+  )
+  @ApiCreatedResponse({
+    type: Company,
+  })
+  public updateCompanyById(
+    @Param('publicId') publicId: string,
+    @Body() dto: UpdateCompanyDto,
+    @GetIdentity() identity: User,
+  ): Promise<Company> {
+    return this.service.updateCompanyById(publicId, dto, identity);
   }
 }
