@@ -1,4 +1,4 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiCreatedResponse, ApiTags } from '@nestjs/swagger';
 import { GetIdentity } from '../../decorators/get-identity.decorator';
 import { AllowedRoles } from '../../decorators/set-allowed-roles.decorator';
@@ -32,5 +32,19 @@ export class CompanyController {
     @GetIdentity() identity: User,
   ): Promise<Company> {
     return this.service.createCompany(dto, identity);
+  }
+
+  @Get()
+  @AllowedRoles(
+    IdentityPermissionRole.SUPER_ADMIN,
+    IdentityPermissionRole.ADMIN,
+    IdentityPermissionRole.COMPANY_ADMIN,
+    IdentityPermissionRole.COMPANY_MEMBER,
+  )
+  @ApiCreatedResponse({
+    type: Company,
+  })
+  public getCompanyByUserId(@GetIdentity() identity: User): Promise<Company> {
+    return this.service.getCompanyByUserId(identity);
   }
 }

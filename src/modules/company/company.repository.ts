@@ -31,12 +31,15 @@ export class CompanyRepository {
   }
 
   public async findCompanyByUserId(userId: number): Promise<Company> {
-    const [company] = await this.entityManager
-      .createQueryBuilder<CompanyUser>(CompanyUser, 'companyUser')
-      .where('companyUser.user_id = :userId', { userId })
-      .leftJoinAndSelect('companyUser.company', 'company')
-      .select('*')
-      .execute();
+    const company = await this.entityManager.findOne(Company, {
+      where: {
+        companyUsers: {
+          where: {
+            userId,
+          },
+        },
+      },
+    });
 
     return company;
   }

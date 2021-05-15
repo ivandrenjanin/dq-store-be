@@ -1,4 +1,9 @@
-import { ForbiddenException, Inject, Injectable } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { Company } from '../../entities/company.entity';
 import { User } from '../../entities/user.entity';
 
@@ -25,6 +30,16 @@ export class CompanyService {
     }
 
     const company = await this.repository.insertCompany(dto, identity);
+
+    return company;
+  }
+
+  public async getCompanyByUserId(identity: User): Promise<Company> {
+    const company = await this.repository.findCompanyByUserId(identity.id);
+
+    if (!company) {
+      throw new NotFoundException();
+    }
 
     return company;
   }
