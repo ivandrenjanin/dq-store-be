@@ -15,5 +15,6 @@ import { CompanyService } from './company.service';
       useClass: CompanyRepository,
     },
   ],
+  exports: [CompanyService],
 })
 export class CompanyModule {}

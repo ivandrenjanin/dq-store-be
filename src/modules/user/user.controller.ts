@@ -9,8 +9,8 @@ import { RolesGuard } from '../../guards/roles.guard';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserService } from './user.service';
 
-@ApiTags('user')
 @ApiBearerAuth()
+@ApiTags('user')
 @Controller('user')
 @UseGuards(JwtAuthGuard, RolesGuard)
 export class UserController {
