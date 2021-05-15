@@ -32,40 +32,25 @@ export class CompanyRepository {
   }
 
   public async updateCompanyById(
-    publicId: string,
+    id: number,
     dto: UpdateCompanyDto,
   ): Promise<Company> {
     return await this.entityManager.transaction(async (txManager) => {
-      await txManager.update(Company, { publicId }, { ...dto });
-
-      return txManager.findOne<Company>(Company, { where: { publicId } });
+      await txManager.update(Company, { id }, { ...dto });
+      return txManager.findOne<Company>(Company, { where: { id } });
     });
   }
 
   public async findCompanyByUserId(userId: number): Promise<Company> {
-    const [company] = await this.entityManager
+    const [companyUser] = await this.entityManager
       .createQueryBuilder<CompanyUser>(CompanyUser, 'companyUser')
+      .select('company_id as "companyId"')
       .where('companyUser.user_id = :userId', { userId })
-      .leftJoinAndSelect('companyUser.company', 'company')
-      .select(
-        `public_id as "publicId",
-        created_at as "createdAt",
-        updated_at as "updatedAt",
-        postal_code as "postalCode",
-        tax_id_number as "taxIdNumber",
-        company_number as "companyNumber",
-        activity_code as "activityCode",
-        bank_name as "bankName",
-        bank_account_number as "bankAccountNumber",
-        phone_fax_number as "phoneFaxNumber",
-        phone_mobile_number as "phoneMobileNumber",
-        website_url as "websiteUrl",
-        is_active as "isActive",
-        name,
-        email
-        `,
-      )
       .execute();
+
+    const company = await this.entityManager.findOne<Company>(Company, {
+      where: { id: companyUser.companyId },
+    });
 
     return company;
   }

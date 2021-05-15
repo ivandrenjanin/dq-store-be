@@ -46,7 +46,7 @@ export class CompanyService {
   }
 
   public async updateCompanyById(
-    publicId: string,
+    id: number,
     dto: UpdateCompanyDto,
     identity: User,
   ) {
@@ -58,14 +58,11 @@ export class CompanyService {
       throw new NotFoundException();
     }
 
-    if (existingCompany.publicId !== publicId) {
+    if (existingCompany.id !== id) {
       throw new ForbiddenException();
     }
 
-    const updatedCompany = await this.repository.updateCompanyById(
-      publicId,
-      dto,
-    );
+    const updatedCompany = await this.repository.updateCompanyById(id, dto);
 
     return updatedCompany;
   }

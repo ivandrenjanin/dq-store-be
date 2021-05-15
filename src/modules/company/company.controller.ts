@@ -20,8 +20,8 @@ import { CompanyService } from './company.service';
 import { CreateCompanyDto } from './dto/create-company.dto';
 import { UpdateCompanyDto } from './dto/update-company.dto';
 
-@ApiTags('company')
 @ApiBearerAuth()
+@ApiTags('company')
 @Controller('company')
 @UseGuards(JwtAuthGuard, RolesGuard)
 export class CompanyController {
@@ -57,7 +57,7 @@ export class CompanyController {
     return this.service.getCompanyByUserId(identity);
   }
 
-  @Patch('/:publicId')
+  @Patch('/:id')
   @AllowedRoles(
     IdentityPermissionRole.SUPER_ADMIN,
     IdentityPermissionRole.ADMIN,
@@ -67,10 +67,10 @@ export class CompanyController {
     type: Company,
   })
   public updateCompanyById(
-    @Param('publicId') publicId: string,
+    @Param('id') id: number,
     @Body() dto: UpdateCompanyDto,
     @GetIdentity() identity: User,
   ): Promise<Company> {
-    return this.service.updateCompanyById(publicId, dto, identity);
+    return this.service.updateCompanyById(id, dto, identity);
   }
 }
