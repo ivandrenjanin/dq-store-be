@@ -7,11 +7,9 @@ import {
 import { APP_FILTER, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { LoggerModule } from 'nestjs-pino';
 import { GlobalExceptionFilter } from '../../filters/global-exception.filter';
 
 import { ConfigService } from './config/config.service';
-import { pinoLoggerOptionsFactory } from './config/factories/pino-logger-options.factory';
 import { PostgreSQLService } from './config/postgresql.service';
 import { EncryptionService } from './encryption/encryption.service';
 import { GlobalController } from './global.controller';
@@ -19,10 +17,6 @@ import { GlobalController } from './global.controller';
 @Global()
 @Module({
   imports: [
-    LoggerModule.forRootAsync({
-      useFactory: pinoLoggerOptionsFactory,
-      inject: [ConfigService],
-    }),
     TypeOrmModule.forRootAsync({
       useClass: PostgreSQLService,
       inject: [ConfigService],
@@ -43,8 +37,10 @@ import { GlobalController } from './global.controller';
         skipNullProperties: false,
         skipUndefinedProperties: false,
         validationError: {
-          target: true /** Indicates if target should be exposed in ValidationError. */,
-          value: true /** Indicates if validated value should be exposed in ValidationError. */,
+          target:
+            true /** Indicates if target should be exposed in ValidationError. */,
+          value:
+            true /** Indicates if validated value should be exposed in ValidationError. */,
         },
       }),
     },
