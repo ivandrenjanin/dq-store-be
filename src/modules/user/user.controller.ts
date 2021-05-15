@@ -1,5 +1,5 @@
 import { Body, Controller, Post, UseGuards } from '@nestjs/common';
-import { ApiCreatedResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiCreatedResponse, ApiTags } from '@nestjs/swagger';
 import { AllowedRoles } from '../../decorators/set-allowed-roles.decorator';
 
 import { User } from '../../entities/user.entity';
@@ -10,6 +10,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UserService } from './user.service';
 
 @ApiTags('user')
+@ApiBearerAuth()
 @Controller('user')
 @UseGuards(JwtAuthGuard, RolesGuard)
 export class UserController {

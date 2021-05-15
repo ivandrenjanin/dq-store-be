@@ -1,4 +1,3 @@
-import { PinoLogger } from 'nestjs-pino';
 import { EntityManager, EntityRepository } from 'typeorm';
 
 import { UnprocessableEntityException } from '@nestjs/common';

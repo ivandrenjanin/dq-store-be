@@ -1,5 +1,5 @@
 import { Body, Controller, Post, UseGuards } from '@nestjs/common';
-import { ApiCreatedResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiCreatedResponse, ApiTags } from '@nestjs/swagger';
 import { GetIdentity } from '../../decorators/get-identity.decorator';
 import { AllowedRoles } from '../../decorators/set-allowed-roles.decorator';
 import { Company } from '../../entities/company.entity';
@@ -12,6 +12,7 @@ import { CompanyService } from './company.service';
 import { CreateCompanyDto } from './dto/create-company.dto';
 
 @ApiTags('company')
+@ApiBearerAuth()
 @Controller('company')
 @UseGuards(JwtAuthGuard, RolesGuard)
 export class CompanyController {
