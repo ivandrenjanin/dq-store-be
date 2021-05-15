@@ -10,7 +10,7 @@ import {
 } from 'typeorm';
 
 export abstract class BaseEntity {
-  @Exclude()
+  @ApiProperty()
   @PrimaryGeneratedColumn()
   public readonly id!: number;
 
