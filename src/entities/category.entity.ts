@@ -18,9 +18,9 @@ export class Category extends BaseEntity {
   @ApiProperty()
   @Column({
     type: String,
-    nullable: true,
+    nullable: false,
   })
-  public code?: string;
+  public code!: string;
 
   @ManyToOne(Entities.INVENTORY)
   @JoinColumn({ name: 'inventory_id' })
