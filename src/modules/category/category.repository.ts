@@ -55,4 +55,10 @@ export class CategoryRepository {
       return txManager.findOne<Category>(Category, { id: categoryId });
     });
   }
+
+  public findCategoryById(id: number, inventory: Inventory): Promise<Category> {
+    return this.entityManager.findOne<Category>(Category, {
+      where: { id, inventory },
+    });
+  }
 }

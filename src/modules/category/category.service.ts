@@ -1,5 +1,6 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { Category } from '../../entities/category.entity';
+import { Inventory } from '../../entities/inventory.entity';
 
 import { User } from '../../entities/user.entity';
 import { InventoryService } from '../inventory/inventory.service';
@@ -46,6 +47,19 @@ export class CategoryService {
       categoryId,
       inventory,
     );
+
+    return category;
+  }
+
+  public async getCategoryById(
+    id: number,
+    inventory: Inventory,
+  ): Promise<Category> {
+    const category = await this.repository.findCategoryById(id, inventory);
+
+    if (!category) {
+      throw new NotFoundException();
+    }
 
     return category;
   }
