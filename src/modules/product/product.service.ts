@@ -11,6 +11,8 @@ import { InventoryService } from '../inventory/inventory.service';
 import { CreateProductDetailsDto } from './dto/create-product-details.dto';
 import { CreateProductDto } from './dto/create-product.dto';
 import { ProductRepository } from './product.repository';
+import { CreateProductCategoryDto } from './dto/create-product-category.dto';
+import { CategoryService } from '../category/category.service';
 
 @Injectable()
 export class ProductService {
@@ -18,6 +20,7 @@ export class ProductService {
     @Inject('PRODUCT_REPOSITORY')
     private readonly repository: ProductRepository,
     private readonly inventoryService: InventoryService,
+    private readonly categoryService: CategoryService,
     public readonly mathService: MathService,
   ) {}
 
@@ -68,5 +71,36 @@ export class ProductService {
     );
 
     return updatedProduct;
+  }
+
+  public async createProductCategory(
+    id: number,
+    inventoryId: number,
+    identity: User,
+    dto: CreateProductCategoryDto,
+  ): Promise<Product> {
+    try {
+      const inventory = await this.inventoryService.getInventoryById(
+        inventoryId,
+        identity,
+      );
+
+      const product = await this.repository.findProductById(id, inventory);
+
+      if (!product) {
+        throw new NotFoundException();
+      }
+
+      const category = await this.categoryService.getCategoryById(
+        dto.categoryId,
+        inventory,
+      );
+
+      await this.repository.insertProductCategory(product, category);
+
+      return this.repository.findProductById(id, inventory);
+    } catch (error) {
+      console.log(error);
+    }
   }
 }

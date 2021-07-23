@@ -47,7 +47,7 @@ export class Product extends BaseEntity {
   @OneToMany(Entities.PRODUCT_DETAILS, 'product')
   public productDetails: ProductDetails[];
 
-  @OneToMany(Entities.PRODUCT_CATEGORY, 'product')
+  @OneToMany(Entities.PRODUCT_CATEGORY, 'product', { eager: true })
   public productCategories!: ProductCategory[];
 
   @OneToMany(Entities.PRODUCT_ORDER, 'product')

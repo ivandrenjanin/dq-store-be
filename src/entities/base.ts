@@ -7,9 +7,10 @@ import {
   Generated,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
+  BaseEntity as Base,
 } from 'typeorm';
 
-export abstract class BaseEntity {
+export abstract class BaseEntity extends Base {
   @ApiProperty()
   @PrimaryGeneratedColumn()
   public readonly id!: number;

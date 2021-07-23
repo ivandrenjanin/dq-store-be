@@ -15,5 +15,6 @@ import { AuthModule } from '../auth/auth.module';
       useClass: CategoryRepository,
     },
   ],
+  exports: [CategoryService],
 })
 export class CategoryModule {}

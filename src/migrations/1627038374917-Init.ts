@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class CreateTables1620922904889 implements MigrationInterface {
-  name = 'CreateTables1620922904889';
+export class Init1627038374917 implements MigrationInterface {
+  name = 'Init1627038374917';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
@@ -11,7 +11,7 @@ export class CreateTables1620922904889 implements MigrationInterface {
       `CREATE TABLE "inventory" ("id" SERIAL NOT NULL, "public_id" uuid NOT NULL DEFAULT uuid_generate_v4(), "created_at" TIMESTAMP NOT NULL DEFAULT now(), "updated_at" TIMESTAMP NOT NULL DEFAULT now(), "deleted_at" TIMESTAMP, "name" character varying NOT NULL, "company_id" integer, CONSTRAINT "UQ_df737ede038afc55726d46ffb2f" UNIQUE ("public_id"), CONSTRAINT "PK_82aa5da437c5bbfb80703b08309" PRIMARY KEY ("id"))`,
     );
     await queryRunner.query(
-      `CREATE TABLE "category" ("id" SERIAL NOT NULL, "public_id" uuid NOT NULL DEFAULT uuid_generate_v4(), "created_at" TIMESTAMP NOT NULL DEFAULT now(), "updated_at" TIMESTAMP NOT NULL DEFAULT now(), "deleted_at" TIMESTAMP, "name" character varying NOT NULL, "code" character varying, "inventory_id" integer, CONSTRAINT "UQ_392f7184be7347bc9dbd54f7d09" UNIQUE ("public_id"), CONSTRAINT "PK_9c4e4a89e3674fc9f382d733f03" PRIMARY KEY ("id"))`,
+      `CREATE TABLE "category" ("id" SERIAL NOT NULL, "public_id" uuid NOT NULL DEFAULT uuid_generate_v4(), "created_at" TIMESTAMP NOT NULL DEFAULT now(), "updated_at" TIMESTAMP NOT NULL DEFAULT now(), "deleted_at" TIMESTAMP, "name" character varying NOT NULL, "code" character varying NOT NULL, "inventory_id" integer, CONSTRAINT "UQ_392f7184be7347bc9dbd54f7d09" UNIQUE ("public_id"), CONSTRAINT "PK_9c4e4a89e3674fc9f382d733f03" PRIMARY KEY ("id"))`,
     );
     await queryRunner.query(
       `CREATE TABLE "user" ("id" SERIAL NOT NULL, "public_id" uuid NOT NULL DEFAULT uuid_generate_v4(), "created_at" TIMESTAMP NOT NULL DEFAULT now(), "updated_at" TIMESTAMP NOT NULL DEFAULT now(), "deleted_at" TIMESTAMP, "email" character varying NOT NULL, "password" character varying NOT NULL, "first_name" character varying NOT NULL, "last_name" character varying NOT NULL, "is_active" boolean NOT NULL DEFAULT true, CONSTRAINT "UQ_efae689c7e0f1cebbca719dbac9" UNIQUE ("public_id"), CONSTRAINT "UQ_e12875dfb3b1d92d7d7c5377e22" UNIQUE ("email"), CONSTRAINT "PK_cace4a159ff9f2512dd42373760" PRIMARY KEY ("id"))`,
@@ -23,10 +23,13 @@ export class CreateTables1620922904889 implements MigrationInterface {
       `CREATE TABLE "order" ("id" SERIAL NOT NULL, "public_id" uuid NOT NULL DEFAULT uuid_generate_v4(), "created_at" TIMESTAMP NOT NULL DEFAULT now(), "updated_at" TIMESTAMP NOT NULL DEFAULT now(), "deleted_at" TIMESTAMP, "total" integer NOT NULL, CONSTRAINT "UQ_994ce213632c71a3ce99154f6a6" UNIQUE ("public_id"), CONSTRAINT "PK_1031171c13130102495201e3e20" PRIMARY KEY ("id"))`,
     );
     await queryRunner.query(
-      `CREATE TABLE "product" ("id" SERIAL NOT NULL, "public_id" uuid NOT NULL DEFAULT uuid_generate_v4(), "created_at" TIMESTAMP NOT NULL DEFAULT now(), "updated_at" TIMESTAMP NOT NULL DEFAULT now(), "deleted_at" TIMESTAMP, "name" character varying NOT NULL, "code" character varying NOT NULL, "selling_price" integer NOT NULL, "quantity" integer NOT NULL, "inventory_id" integer, CONSTRAINT "UQ_0b389232bdb2c2b7b7236bb5bcc" UNIQUE ("public_id"), CONSTRAINT "PK_bebc9158e480b949565b4dc7a82" PRIMARY KEY ("id"))`,
+      `CREATE TABLE "product" ("id" SERIAL NOT NULL, "public_id" uuid NOT NULL DEFAULT uuid_generate_v4(), "created_at" TIMESTAMP NOT NULL DEFAULT now(), "updated_at" TIMESTAMP NOT NULL DEFAULT now(), "deleted_at" TIMESTAMP, "name" character varying NOT NULL, "code" character varying NOT NULL, "selling_price" integer NOT NULL, "quantity" integer NOT NULL DEFAULT '0', "inventory_id" integer, CONSTRAINT "UQ_0b389232bdb2c2b7b7236bb5bcc" UNIQUE ("public_id"), CONSTRAINT "PK_bebc9158e480b949565b4dc7a82" PRIMARY KEY ("id"))`,
     );
     await queryRunner.query(
       `CREATE TABLE "product_category" ("id" SERIAL NOT NULL, "product_id" integer, "category_id" integer, CONSTRAINT "PK_0dce9bc93c2d2c399982d04bef1" PRIMARY KEY ("id"))`,
+    );
+    await queryRunner.query(
+      `CREATE TABLE "product_details" ("id" SERIAL NOT NULL, "public_id" uuid NOT NULL DEFAULT uuid_generate_v4(), "created_at" TIMESTAMP NOT NULL DEFAULT now(), "updated_at" TIMESTAMP NOT NULL DEFAULT now(), "deleted_at" TIMESTAMP, "primePrice" integer NOT NULL, "quantity" integer NOT NULL, "product_id" integer, CONSTRAINT "UQ_4db9b92939af47aca45cc2a2982" UNIQUE ("public_id"), CONSTRAINT "PK_a3fa8e2e94f3c37a8d731451de4" PRIMARY KEY ("id"))`,
     );
     await queryRunner.query(
       `CREATE TABLE "product_order" ("id" SERIAL NOT NULL, "total" integer NOT NULL, "quantity" integer NOT NULL, "product_id" integer, "order_id" integer, CONSTRAINT "PK_9849f0d8ce095e50e752616f691" PRIMARY KEY ("id"))`,
@@ -59,6 +62,9 @@ export class CreateTables1620922904889 implements MigrationInterface {
       `ALTER TABLE "product_category" ADD CONSTRAINT "FK_2df1f83329c00e6eadde0493e16" FOREIGN KEY ("category_id") REFERENCES "category"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`,
     );
     await queryRunner.query(
+      `ALTER TABLE "product_details" ADD CONSTRAINT "FK_abbb591b1989c63fb0c240dfffb" FOREIGN KEY ("product_id") REFERENCES "product"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`,
+    );
+    await queryRunner.query(
       `ALTER TABLE "product_order" ADD CONSTRAINT "FK_2a8da6a067cb59557b708fd4a29" FOREIGN KEY ("product_id") REFERENCES "product"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`,
     );
     await queryRunner.query(
@@ -69,6 +75,14 @@ export class CreateTables1620922904889 implements MigrationInterface {
     );
     await queryRunner.query(
       `ALTER TABLE "user_role" ADD CONSTRAINT "FK_d0e5815877f7395a198a4cb0a46" FOREIGN KEY ("user_id") REFERENCES "user"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`,
+    );
+    await queryRunner.query(
+      `INSERT INTO "public"."role"("id","name","description")
+        VALUES
+        (DEFAULT,E'SUPER_ADMIN',E'SUPER_ADMIN'),
+        (DEFAULT,E'ADMIN',E'ADMIN'),
+        (DEFAULT,E'COMPANY_ADMIN',E'COMPANY_ADMIN'),
+        (DEFAULT,E'COMPANY_MEMBER',E'COMPANY_MEMBER');`,
     );
   }
 
@@ -84,6 +98,9 @@ export class CreateTables1620922904889 implements MigrationInterface {
     );
     await queryRunner.query(
       `ALTER TABLE "product_order" DROP CONSTRAINT "FK_2a8da6a067cb59557b708fd4a29"`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "product_details" DROP CONSTRAINT "FK_abbb591b1989c63fb0c240dfffb"`,
     );
     await queryRunner.query(
       `ALTER TABLE "product_category" DROP CONSTRAINT "FK_2df1f83329c00e6eadde0493e16"`,
@@ -109,6 +126,7 @@ export class CreateTables1620922904889 implements MigrationInterface {
     await queryRunner.query(`DROP TABLE "user_role"`);
     await queryRunner.query(`DROP TABLE "role"`);
     await queryRunner.query(`DROP TABLE "product_order"`);
+    await queryRunner.query(`DROP TABLE "product_details"`);
     await queryRunner.query(`DROP TABLE "product_category"`);
     await queryRunner.query(`DROP TABLE "product"`);
     await queryRunner.query(`DROP TABLE "order"`);

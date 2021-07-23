@@ -65,11 +65,6 @@ export class CreateUserDto {
       IdentityPermissionRole.COMPANY_ADMIN,
       IdentityPermissionRole.COMPANY_MEMBER,
     ],
-    examples: [
-      IdentityPermissionRole.ADMIN,
-      IdentityPermissionRole.COMPANY_ADMIN,
-      IdentityPermissionRole.COMPANY_MEMBER,
-    ],
   })
   @IsNotEmpty()
   @IsString()

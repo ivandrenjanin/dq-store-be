@@ -42,11 +42,17 @@ export class CompanyRepository {
   }
 
   public async findCompanyByUserId(userId: number): Promise<Company> {
-    const [companyUser] = await this.entityManager
+    const companyUserResponse = await this.entityManager
       .createQueryBuilder<CompanyUser>(CompanyUser, 'companyUser')
       .select('company_id as "companyId"')
       .where('companyUser.user_id = :userId', { userId })
       .execute();
+
+    if (companyUserResponse.length === 0) {
+      return null;
+    }
+
+    const companyUser = companyUserResponse[0];
 
     const company = await this.entityManager.findOne<Company>(Company, {
       where: { id: companyUser.companyId },

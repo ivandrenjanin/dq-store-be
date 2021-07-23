@@ -8,6 +8,7 @@ import { User } from '../../entities/user.entity';
 import { IdentityPermissionRole } from '../../enums/identity-role.enum';
 import { JwtAuthGuard } from '../../guards/jwt-auth.guard';
 import { RolesGuard } from '../../guards/roles.guard';
+import { CreateProductCategoryDto } from './dto/create-product-category.dto';
 import { CreateProductDetailsDto } from './dto/create-product-details.dto';
 import { CreateProductDto } from './dto/create-product.dto';
 import { ProductService } from './product.service';
@@ -70,6 +71,8 @@ export class ProductController {
     @Param('inventoryId') inventoryId: number,
     @Param('id') id: number,
     @GetIdentity() identity: User,
-    @Body() dto: CreateProductCategory,
-  ) {}
+    @Body() dto: CreateProductCategoryDto,
+  ) {
+    return this.service.createProductCategory(id, inventoryId, identity, dto);
+  }
 }

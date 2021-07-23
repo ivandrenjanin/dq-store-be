@@ -13,7 +13,7 @@ export class ProductCategory {
   @JoinColumn({ name: 'product_id' })
   public product!: Product;
 
-  @ManyToOne(Entities.CATEGORY)
+  @ManyToOne(Entities.CATEGORY, { eager: true })
   @JoinColumn({ name: 'category_id' })
   public category!: Category;
 }

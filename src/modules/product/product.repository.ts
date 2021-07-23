@@ -1,6 +1,8 @@
 import { UnprocessableEntityException } from '@nestjs/common';
 import { EntityManager, EntityRepository } from 'typeorm';
+import { Category } from '../../entities/category.entity';
 import { Inventory } from '../../entities/inventory.entity';
+import { ProductCategory } from '../../entities/product-category.entity';
 import { ProductDetails } from '../../entities/product-details.entity';
 import { Product } from '../../entities/product.entity';
 import { CreateProductDetailsDto } from './dto/create-product-details.dto';
@@ -43,6 +45,18 @@ export class ProductRepository {
       this.entityManager.create<ProductDetails>(ProductDetails, {
         ...dto,
         product,
+      }),
+    );
+  }
+
+  public async insertProductCategory(
+    product: Product,
+    category: Category,
+  ): Promise<void> {
+    await this.entityManager.save<ProductCategory>(
+      this.entityManager.create<ProductCategory>(ProductCategory, {
+        product,
+        category,
       }),
     );
   }

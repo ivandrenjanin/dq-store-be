@@ -1,7 +1,7 @@
 import { Body, Controller, Post, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiCreatedResponse, ApiTags } from '@nestjs/swagger';
-import { AllowedRoles } from '../../decorators/set-allowed-roles.decorator';
 
+import { AllowedRoles } from '../../decorators/set-allowed-roles.decorator';
 import { User } from '../../entities/user.entity';
 import { IdentityPermissionRole } from '../../enums/identity-role.enum';
 import { JwtAuthGuard } from '../../guards/jwt-auth.guard';
@@ -17,10 +17,7 @@ export class UserController {
   constructor(private readonly service: UserService) {}
 
   @Post()
-  @AllowedRoles(
-    IdentityPermissionRole.SUPER_ADMIN,
-    IdentityPermissionRole.ADMIN,
-  )
+  @AllowedRoles(IdentityPermissionRole.SUPER_ADMIN)
   @ApiCreatedResponse({
     type: User,
   })
