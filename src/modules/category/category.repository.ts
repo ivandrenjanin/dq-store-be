@@ -17,6 +17,7 @@ export class CategoryRepository {
       const { code, name } = dto;
 
       const existing = await txManager.findOne<Category>(Category, {
+        name,
         code,
         inventory,
       });
