@@ -5,6 +5,7 @@ import { BaseEntity } from './base';
 import { Category } from './category.entity';
 import { Company } from './company.entity';
 import { Entities } from './enum/entity.enum';
+import { Order } from './order.entity';
 import { Product } from './product.entity';
 
 @Entity({ name: 'inventory' })
@@ -25,4 +26,7 @@ export class Inventory extends BaseEntity {
 
   @OneToMany(Entities.CATEGORY, 'inventory')
   public categories: Category[];
+
+  @OneToMany(Entities.ORDER, 'inventory')
+  public orders: Order[];
 }

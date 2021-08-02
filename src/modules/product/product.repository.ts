@@ -1,5 +1,7 @@
-import { UnprocessableEntityException } from '@nestjs/common';
 import { EntityManager, EntityRepository } from 'typeorm';
+
+import { UnprocessableEntityException } from '@nestjs/common';
+
 import { Category } from '../../entities/category.entity';
 import { Inventory } from '../../entities/inventory.entity';
 import { ProductCategory } from '../../entities/product-category.entity';
@@ -78,6 +80,15 @@ export class ProductRepository {
   public findProductById(id: number, inventory: Inventory): Promise<Product> {
     return this.entityManager.findOne<Product>(Product, {
       where: { id, inventory },
+    });
+  }
+
+  public findProductByIds(
+    ids: number[],
+    inventory: Inventory,
+  ): Promise<Product[]> {
+    return this.entityManager.findByIds<Product>(Product, ids, {
+      where: { inventory },
     });
   }
 }

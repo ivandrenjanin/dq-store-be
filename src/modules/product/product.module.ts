@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+
 import { AuthModule } from '../auth/auth.module';
 import { CategoryModule } from '../category/category.module';
 import { InventoryModule } from '../inventory/inventory.module';
@@ -16,5 +17,6 @@ import { ProductService } from './product.service';
       useClass: ProductRepository,
     },
   ],
+  exports: [ProductService],
 })
 export class ProductModule {}

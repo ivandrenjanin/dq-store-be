@@ -38,7 +38,7 @@ export class InventoryRepository {
   ): Promise<Inventory> {
     return this.entityManager.findOne<Inventory>(Inventory, {
       where: { id, company },
-      relations: ['categories', 'products'],
+      relations: ['categories', 'products', 'orders'],
     });
   }
 

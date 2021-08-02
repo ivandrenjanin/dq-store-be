@@ -11,4 +11,22 @@ export class MathService {
 
     return z.toNumber();
   }
+
+  public subtract(a: number, b: number): number {
+    const x = new Decimal(a);
+    const y = new Decimal(b);
+
+    const z = x.minus(y);
+
+    return z.toNumber();
+  }
+
+  public multiply(a: number, b: number): number {
+    const x = new Decimal(a);
+    const y = new Decimal(b);
+
+    const z = x.mul(y);
+
+    return z.toNumber();
+  }
 }

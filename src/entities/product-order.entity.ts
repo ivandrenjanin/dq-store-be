@@ -30,7 +30,7 @@ export class ProductOrder {
   })
   public quantity!: number;
 
-  @ManyToOne(Entities.PRODUCT)
+  @ManyToOne(Entities.PRODUCT, { eager: true })
   @JoinColumn({ name: 'product_id' })
   public product!: Product;
 
