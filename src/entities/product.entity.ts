@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
+import { UnitOfMessure } from '../enums/unit-of-messure.enum';
 
 import { BaseEntity } from './base';
 import { Entities } from './enum/entity.enum';
@@ -39,6 +40,17 @@ export class Product extends BaseEntity {
     default: 0,
   })
   public quantity!: number;
+
+  @ApiProperty()
+  @Column({
+    type: 'enum',
+    nullable: false,
+    name: 'unit_of_messure',
+    default: UnitOfMessure.EACH,
+    enum: UnitOfMessure,
+    enumName: 'unit_of_messure',
+  })
+  public unitOfMessure!: UnitOfMessure;
 
   @ManyToOne(Entities.INVENTORY)
   @JoinColumn({ name: 'inventory_id' })
