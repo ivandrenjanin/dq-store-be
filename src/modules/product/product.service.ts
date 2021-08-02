@@ -46,7 +46,7 @@ export class ProductService {
     inventoryId: number,
     identity: User,
     dto: CreateProductDetailsDto,
-  ): Promise<Product> {
+  ): Promise<void> {
     const inventory = await this.inventoryService.getInventoryById(
       inventoryId,
       identity,
@@ -62,13 +62,7 @@ export class ProductService {
 
     await this.repository.insertProductDetails(dto, product);
 
-    const updatedProduct = await this.updateProductQuantity(
-      product.id,
-      inventory,
-      newQuantity,
-    );
-
-    return updatedProduct;
+    await this.updateProductQuantity(product.id, inventory, newQuantity);
   }
 
   public async createProductCategory(
@@ -106,7 +100,7 @@ export class ProductService {
     id: number,
     inventory: Inventory,
     quantity: number,
-  ): Promise<Product> {
+  ): Promise<void> {
     return await this.repository.updateProductQuantity(id, inventory, quantity);
   }
 

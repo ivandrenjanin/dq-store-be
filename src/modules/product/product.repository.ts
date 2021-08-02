@@ -67,14 +67,12 @@ export class ProductRepository {
     id: number,
     inventory: Inventory,
     quantity: number,
-  ) {
-    return await this.entityManager.transaction(async (txManager) => {
-      await txManager.update<Product>(Product, { id, inventory }, { quantity });
-
-      return await txManager.findOne<Product>(Product, {
-        where: { id, inventory },
-      });
-    });
+  ): Promise<void> {
+    await this.entityManager.update<Product>(
+      Product,
+      { id, inventory },
+      { quantity },
+    );
   }
 
   public findProductById(id: number, inventory: Inventory): Promise<Product> {

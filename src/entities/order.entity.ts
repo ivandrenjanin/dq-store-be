@@ -20,6 +20,9 @@ export class Order extends BaseEntity {
   @JoinColumn({ name: 'inventory_id' })
   public inventory!: Inventory;
 
-  @OneToMany(Entities.PRODUCT_ORDER, 'order', { eager: true })
+  @OneToMany(Entities.PRODUCT_ORDER, 'order', {
+    eager: true,
+    onDelete: 'CASCADE',
+  })
   public productOrders!: ProductOrder[];
 }

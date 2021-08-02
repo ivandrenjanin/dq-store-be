@@ -46,14 +46,14 @@ export class ProductController {
     IdentityPermissionRole.COMPANY_MEMBER,
   )
   @ApiCreatedResponse({
-    type: Product,
+    type: null,
   })
   public createProductDetails(
     @Param('inventoryId') inventoryId: number,
     @Param('id') id: number,
     @GetIdentity() identity: User,
     @Body() dto: CreateProductDetailsDto,
-  ): Promise<Product> {
+  ): Promise<void> {
     return this.service.createProductDetails(id, inventoryId, identity, dto);
   }
 

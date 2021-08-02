@@ -31,17 +31,8 @@ export class OrderRepository {
     );
   }
 
-  public async updateOrderGrandTotal(
-    id: number,
-    total: number,
-  ): Promise<Order> {
-    return await this.entityManager.transaction(async (txManager) => {
-      await txManager.update(Order, { id }, { total });
-      return txManager.findOne<Order>(Order, {
-        where: { id },
-        relations: ['productOrders'],
-      });
-    });
+  public async updateOrderGrandTotal(id: number, total: number): Promise<void> {
+    await this.entityManager.update(Order, { id }, { total });
   }
 
   public async deleteOrder(id: number) {

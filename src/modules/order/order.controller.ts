@@ -26,13 +26,13 @@ export class OrderController {
     IdentityPermissionRole.COMPANY_MEMBER,
   )
   @ApiCreatedResponse({
-    type: Order,
+    type: null,
   })
   public async createOrder(
     @Param('inventoryId') inventoryId: number,
     @GetIdentity() identity: User,
     @Body() dto: CreateOrderDto,
-  ): Promise<Order> {
+  ): Promise<void> {
     return this.service.createOrder(inventoryId, identity, dto);
   }
 }

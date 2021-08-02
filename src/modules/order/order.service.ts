@@ -27,7 +27,7 @@ export class OrderService {
     inventoryId: number,
     identity: User,
     dto: CreateOrderDto,
-  ): Promise<Order> {
+  ): Promise<void> {
     const inventory = await this.inventoryService.getInventoryById(
       inventoryId,
       identity,
@@ -39,10 +39,9 @@ export class OrderService {
     );
 
     const order = await this.repository.insertOrder(inventory);
+    let grandTotal = 0;
 
     try {
-      let grandTotal = 0;
-
       if (products.length !== dto.order.length) {
         throw new NotFoundException('PRODUCTS_NOT_FOUND');
       }
@@ -51,6 +50,7 @@ export class OrderService {
         const innerDto = dto.order.find((o) => o.productId === product.id);
 
         if (innerDto.quantity > product.quantity) {
+          console.log({ innerDto, product });
           throw new BadRequestException('NOT_ENOUGH_PRODUCTS');
         }
 
@@ -60,6 +60,7 @@ export class OrderService {
         );
 
         if (newQuantity < 0) {
+          console.log({ newQuantity, quantity: product.quantity });
           throw new BadRequestException('NOT_ENOUGH_PRODUCTS');
         }
       }
@@ -93,18 +94,15 @@ export class OrderService {
         );
       }
 
-      const updatedOrder = await this.repository.updateOrderGrandTotal(
-        order.id,
-        grandTotal,
-      );
-
-      return updatedOrder;
+      await this.repository.updateOrderGrandTotal(order.id, grandTotal);
     } catch (error) {
-      try {
-        await this.repository.deleteOrder(order.id);
-      } catch (e) {
-        throw e;
-      }
+      console.log(error);
+      // try {
+      //   await this.repository.deleteOrder(order.id);
+      // } catch (e) {
+      //   console.log(e);
+      //   throw e;
+      // }
       throw error;
     }
   }
