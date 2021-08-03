@@ -35,6 +35,30 @@ export class Product extends BaseEntity {
 
   @ApiProperty()
   @Column({
+    name: 'prime_price',
+    type: 'int',
+    nullable: false,
+  })
+  public primePrice!: number;
+
+  @ApiProperty()
+  @Column({
+    name: 'taxed_price',
+    type: 'int',
+    nullable: false,
+  })
+  public taxedPrice!: number;
+
+  @ApiProperty()
+  @Column({
+    name: 'tax_rate',
+    type: 'int',
+    nullable: false,
+  })
+  public taxRate!: number;
+
+  @ApiProperty()
+  @Column({
     type: 'int',
     nullable: false,
     default: 0,

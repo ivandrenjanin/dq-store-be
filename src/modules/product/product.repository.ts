@@ -16,6 +16,7 @@ export class ProductRepository {
 
   public async insertProduct(
     dto: CreateProductDto,
+    taxedPrice: number,
     inventory: Inventory,
   ): Promise<Product> {
     return await this.entityManager.transaction(async (txManager) => {
@@ -30,7 +31,7 @@ export class ProductRepository {
       }
 
       const product = await txManager.save<Product>(
-        txManager.create<Product>(Product, { ...dto, inventory }),
+        txManager.create<Product>(Product, { ...dto, taxedPrice, inventory }),
       );
 
       return await txManager.findOne<Product>(Product, {

@@ -41,6 +41,18 @@ export class CreateProductDto {
   @IsPositive()
   public sellingPrice!: number;
 
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsNumber()
+  @IsPositive()
+  public primePrice!: number;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsNumber()
+  @IsPositive()
+  public taxRate!: number;
+
   @ApiProperty({
     minLength: 1,
     maxLength: 100,

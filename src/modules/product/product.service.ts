@@ -36,7 +36,18 @@ export class ProductService {
       identity,
     );
 
-    const product = await this.repository.insertProduct(dto, inventory);
+    const { sellingPrice, taxRate } = dto;
+
+    const taxedPrice = this.mathService.add(
+      sellingPrice,
+      this.mathService.calculatePercent(sellingPrice, taxRate),
+    );
+
+    const product = await this.repository.insertProduct(
+      dto,
+      taxedPrice,
+      inventory,
+    );
 
     return product;
   }

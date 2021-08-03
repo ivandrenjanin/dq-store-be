@@ -37,6 +37,42 @@ export class UpdateCompanyDto {
   @ApiProperty({
     minLength: 1,
     maxLength: 100,
+    required: false,
+  })
+  @IsOptional()
+  @IsNotEmpty()
+  @IsString()
+  @MinLength(1)
+  @MaxLength(100)
+  public streetNumber?: string;
+
+  @ApiProperty({
+    minLength: 1,
+    maxLength: 100,
+    required: false,
+  })
+  @IsOptional()
+  @IsNotEmpty()
+  @IsString()
+  @MinLength(1)
+  @MaxLength(100)
+  public street?: string;
+
+  @ApiProperty({
+    minLength: 1,
+    maxLength: 100,
+    required: false,
+  })
+  @IsOptional()
+  @IsNotEmpty()
+  @IsString()
+  @MinLength(1)
+  @MaxLength(100)
+  public city?: string;
+
+  @ApiProperty({
+    minLength: 1,
+    maxLength: 100,
     required: true,
   })
   @IsOptional()
@@ -130,17 +166,4 @@ export class UpdateCompanyDto {
   @MinLength(1)
   @MaxLength(100)
   public email?: string;
-
-  @ApiProperty({
-    minLength: 1,
-    maxLength: 100,
-    required: false,
-  })
-  @IsOptional()
-  @IsNotEmpty()
-  @IsString()
-  @IsUrl()
-  @MinLength(1)
-  @MaxLength(100)
-  public websiteURL?: string;
 }

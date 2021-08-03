@@ -1,14 +1,14 @@
-import { Body, Controller, Param, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiCreatedResponse, ApiTags } from '@nestjs/swagger';
 
 import { GetIdentity } from '../../decorators/get-identity.decorator';
 import { AllowedRoles } from '../../decorators/set-allowed-roles.decorator';
-import { Order } from '../../entities/order.entity';
 import { User } from '../../entities/user.entity';
 import { IdentityPermissionRole } from '../../enums/identity-role.enum';
 import { JwtAuthGuard } from '../../guards/jwt-auth.guard';
 import { RolesGuard } from '../../guards/roles.guard';
 import { CreateOrderDto } from './dto/create-order.dto';
+import { FileResponse } from './dto/file-response';
 import { OrderService } from './order.service';
 
 @ApiBearerAuth()
@@ -34,5 +34,29 @@ export class OrderController {
     @Body() dto: CreateOrderDto,
   ): Promise<void> {
     return this.service.createOrder(inventoryId, identity, dto);
+  }
+
+  @Get('/:orderId/invoice')
+  @AllowedRoles(
+    IdentityPermissionRole.SUPER_ADMIN,
+    IdentityPermissionRole.ADMIN,
+    IdentityPermissionRole.COMPANY_ADMIN,
+    IdentityPermissionRole.COMPANY_MEMBER,
+  )
+  @ApiCreatedResponse({
+    type: FileResponse,
+  })
+  public async getOrderInvoice(
+    @Param('inventoryId') inventoryId: number,
+    @Param('orderId') orderId: number,
+    @GetIdentity() identity: User,
+  ) {
+    const { file, fileName } = await this.service.getOrderInvoice(
+      inventoryId,
+      orderId,
+      identity,
+    );
+
+    return { file: file.toString('base64'), fileName };
   }
 }

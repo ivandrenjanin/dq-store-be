@@ -8,6 +8,7 @@ import { Product } from './product.entity';
 export class ProductDetails extends BaseEntity {
   @ApiProperty()
   @Column({
+    name: 'prime_price',
     type: 'int',
     nullable: false,
   })

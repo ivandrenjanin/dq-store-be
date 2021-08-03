@@ -1,15 +1,11 @@
-import { Column, Entity, OneToMany } from 'typeorm';
-
 import { ApiProperty } from '@nestjs/swagger';
-
-import { Entities } from './enum/entity.enum';
-import { CompanyUser } from './company-user.entity';
+import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 import { BaseEntity } from './base';
-import { Inventory } from './inventory.entity';
-import { CompanyClient } from './company-client.entity';
+import { Company } from './company.entity';
+import { Entities } from './enum/entity.enum';
 
-@Entity({ name: 'company' })
-export class Company extends BaseEntity {
+@Entity({ name: 'company_client' })
+export class CompanyClient extends BaseEntity {
   @ApiProperty()
   @Column({
     name: 'name',
@@ -40,7 +36,6 @@ export class Company extends BaseEntity {
     nullable: true,
   })
   public city?: string;
-
   @ApiProperty()
   @Column({
     name: 'tax_id_number',
@@ -56,14 +51,6 @@ export class Company extends BaseEntity {
     type: String,
   })
   public companyNumber!: string;
-
-  @ApiProperty()
-  @Column({
-    name: 'activity_code',
-    nullable: true,
-    type: String,
-  })
-  public activityCode?: string;
 
   @ApiProperty()
   @Column({
@@ -105,20 +92,7 @@ export class Company extends BaseEntity {
   })
   public email?: string;
 
-  @ApiProperty()
-  @Column({
-    name: 'is_active',
-    default: true,
-    type: Boolean,
-  })
-  public isActive!: boolean;
-
-  @OneToMany(Entities.COMPANY_USER, 'company')
-  public companyUsers!: CompanyUser[];
-
-  @OneToMany(Entities.INVENTORY, 'company')
-  public inventories: Inventory[];
-
-  @OneToMany(Entities.COMPANY_CLIENT, 'company')
-  public clients: CompanyClient[];
+  @ManyToOne(Entities.COMPANY)
+  @JoinColumn({ name: 'company_id' })
+  public company!: Company;
 }

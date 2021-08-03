@@ -29,4 +29,13 @@ export class MathService {
 
     return z.toNumber();
   }
+
+  public calculatePercent(number: number, percent: number) {
+    const x = new Decimal(number);
+    const y = new Decimal(percent);
+
+    const z = y.dividedBy(100).mul(x);
+
+    return z.toNumber();
+  }
 }

@@ -38,4 +38,10 @@ export class OrderRepository {
   public async deleteOrder(id: number) {
     await this.entityManager.delete<Order>(Order, id);
   }
+
+  public async findOrderById(id: number, inventory: Inventory): Promise<Order> {
+    return await this.entityManager.findOne<Order>(Order, {
+      where: { id, inventory },
+    });
+  }
 }
