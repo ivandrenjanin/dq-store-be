@@ -7,6 +7,7 @@ import { InventoryService } from '../inventory/inventory.service';
 import { CategoryRepository } from './category.repository';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
+import { CategoryExceptionMessage } from './enum/category-exception-message.enum';
 
 @Injectable()
 export class CategoryService {
@@ -58,7 +59,7 @@ export class CategoryService {
     const category = await this.repository.findCategoryById(id, inventory);
 
     if (!category) {
-      throw new NotFoundException();
+      throw new NotFoundException(CategoryExceptionMessage.CATEGORY_NOT_FOUND);
     }
 
     return category;

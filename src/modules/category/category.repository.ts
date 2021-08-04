@@ -4,6 +4,7 @@ import { Category } from '../../entities/category.entity';
 import { Inventory } from '../../entities/inventory.entity';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
+import { CategoryExceptionMessage } from './enum/category-exception-message.enum';
 
 @EntityRepository()
 export class CategoryRepository {
@@ -15,15 +16,21 @@ export class CategoryRepository {
   ): Promise<Category> {
     return await this.entityManager.transaction(async (txManager) => {
       const { code, name } = dto;
+      const found = await txManager
+        .createQueryBuilder()
+        .select()
+        .addFrom(Category, 'category')
+        .where(`category.code = '${code}'`)
+        .andWhere(`category.inventory_id = ${inventory.id}`)
+        .orWhere(`category.code = '${code}'`)
+        .andWhere(`category.name = '${name}'`)
+        .andWhere(`category.inventory_id = ${inventory.id}`)
+        .execute();
 
-      const existing = await txManager.findOne<Category>(Category, {
-        name,
-        code,
-        inventory,
-      });
-
-      if (existing) {
-        throw new UnprocessableEntityException();
+      if (found.length > 0) {
+        throw new UnprocessableEntityException(
+          CategoryExceptionMessage.CATEGORY_CODE_OR_NAME_EXIST,
+        );
       }
 
       const category = await txManager.save<Category>(
@@ -41,13 +48,18 @@ export class CategoryRepository {
   ): Promise<Category> {
     return await this.entityManager.transaction(async (txManager) => {
       if (dto.code) {
-        const existing = await txManager.findOne<Category>(Category, {
-          code: dto.code,
-          inventory,
-        });
+        const found = await txManager
+          .createQueryBuilder()
+          .select()
+          .addFrom(Category, 'category')
+          .where(`category.code = '${dto.code}'`)
+          .andWhere(`category.inventory_id = ${inventory.id}`)
+          .execute();
 
-        if (existing) {
-          throw new UnprocessableEntityException();
+        if (found.length > 0) {
+          throw new UnprocessableEntityException(
+            CategoryExceptionMessage.CATEGORY_CODE_OR_NAME_EXIST,
+          );
         }
       }
 
