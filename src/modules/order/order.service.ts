@@ -6,6 +6,7 @@ import {
   StreamableFile,
 } from '@nestjs/common';
 import { Readable } from 'stream';
+import { CompanyClient } from '../../entities/company-client.entity';
 
 import { Order } from '../../entities/order.entity';
 import { User } from '../../entities/user.entity';
@@ -106,12 +107,6 @@ export class OrderService {
       await this.repository.updateOrderGrandTotal(order.id, grandTotal);
     } catch (error) {
       console.log(error);
-      // try {
-      //   await this.repository.deleteOrder(order.id);
-      // } catch (e) {
-      //   console.log(e);
-      //   throw e;
-      // }
       throw error;
     }
   }
@@ -130,14 +125,14 @@ export class OrderService {
 
     const order = await this.repository.findOrderById(orderId, inventory);
 
-    const template = generateOrderInvoiceTemplate();
+    const template = generateOrderInvoiceTemplate(company, order, '20/2021');
 
     const { file } = await generatePDF(
       template,
       this.configService.getOrThrow(ConfigOption.CHROMIUM_EXE_PATH),
     );
 
-    const fileName = `filename.pdf`;
+    const fileName = `'20/2021'.pdf`;
 
     return { file, fileName };
   }
