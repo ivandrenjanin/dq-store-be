@@ -324,16 +324,22 @@ export const generateOrderInvoiceTemplate = (
         <tr>
         <td><h6>${i + 1}.</h6></td>
         <td>
-        <h6>${productOrder.product.name}</h6>
+        <h6 style="text-align:left;">${productOrder.product.name}</h6>
         </td>
-        <td><h6>${translateUOM(productOrder.product.unitOfMessure)}</h6></td>
-        <td><h6>${productOrder.quantity}</h6></td>
-        <td><h6>${productOrder.total}</h6></td>
-        <td><h6>${productOrder.total}</h6></td>
-        <td><h6>${productOrder.total}</h6></td>
-        <td><h6>${productOrder.product.taxRate}</h6></td>
-        <td><h6>${productOrder.totalTaxed - productOrder.total}</h6></td>
-        <td><h6>${productOrder.totalTaxed}</h6></td>
+        <td><h6 style="text-align:left;">${translateUOM(
+          productOrder.product.unitOfMessure,
+        )}</h6></td>
+        <td><h6 style="text-align:right;">${productOrder.quantity}</h6></td>
+        <td><h6 style="text-align:right;>${productOrder.total}</h6></td>
+        <td><h6 style="text-align:right;>${productOrder.total}</h6></td>
+        <td><h6 style="text-align:right;>${productOrder.total}</h6></td>
+        <td><h6 style="text-align:right;>${
+          productOrder.product.taxRate
+        }</h6></td>
+        <td><h6 style="text-align:right;>${
+          productOrder.totalTaxed - productOrder.total
+        }</h6></td>
+        <td><h6 style="text-align:right;>${productOrder.totalTaxed}</h6></td>
         </tr>
         `,
           )
