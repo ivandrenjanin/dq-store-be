@@ -28,6 +28,13 @@ export class ProductOrder {
     type: 'int',
     nullable: false,
   })
+  public totalTaxed!: number;
+
+  @ApiProperty()
+  @Column({
+    type: 'int',
+    nullable: false,
+  })
   public quantity!: number;
 
   @ManyToOne(Entities.PRODUCT, { eager: true })

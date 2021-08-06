@@ -2,6 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 
 import { BaseEntity } from './base';
+import { CompanyClient } from './company-client.entity';
 import { Entities } from './enum/entity.enum';
 import { Inventory } from './inventory.entity';
 import { ProductOrder } from './product-order.entity';
@@ -16,9 +17,28 @@ export class Order extends BaseEntity {
   })
   public total!: number;
 
+  @ApiProperty()
+  @Column({
+    type: 'int',
+    default: 0,
+    nullable: false,
+  })
+  public totalTaxed!: number;
+
+  @ApiProperty()
+  @Column({
+    type: String,
+    nullable: false,
+  })
+  public orderNumber!: string;
+
   @ManyToOne(Entities.INVENTORY)
   @JoinColumn({ name: 'inventory_id' })
   public inventory!: Inventory;
+
+  @ManyToOne(Entities.COMPANY_CLIENT, { eager: true })
+  @JoinColumn({ name: 'company_client_id' })
+  public companyClient!: CompanyClient;
 
   @OneToMany(Entities.PRODUCT_ORDER, 'order', {
     eager: true,

@@ -1,8 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 import { BaseEntity } from './base';
 import { Company } from './company.entity';
 import { Entities } from './enum/entity.enum';
+import { Order } from './order.entity';
 
 @Entity({ name: 'company_client' })
 export class CompanyClient extends BaseEntity {
@@ -36,10 +37,10 @@ export class CompanyClient extends BaseEntity {
     nullable: true,
   })
   public city?: string;
+
   @ApiProperty()
   @Column({
     name: 'tax_id_number',
-    unique: true,
     type: String,
   })
   public taxIdNumber!: string;
@@ -47,7 +48,6 @@ export class CompanyClient extends BaseEntity {
   @ApiProperty()
   @Column({
     name: 'company_number',
-    unique: true,
     type: String,
   })
   public companyNumber!: string;
@@ -95,4 +95,7 @@ export class CompanyClient extends BaseEntity {
   @ManyToOne(Entities.COMPANY)
   @JoinColumn({ name: 'company_id' })
   public company!: Company;
+
+  @OneToMany(Entities.ORDER, 'companyClient')
+  public orders: Order[];
 }
