@@ -3,14 +3,11 @@ import {
   Inject,
   Injectable,
   NotFoundException,
-  StreamableFile,
 } from '@nestjs/common';
-import { Readable } from 'stream';
-import { CompanyClient } from '../../entities/company-client.entity';
 
-import { Order } from '../../entities/order.entity';
 import { User } from '../../entities/user.entity';
 import { ConfigOption } from '../../enums/config-option.enum';
+import { CompanyClientService } from '../company-client/company-client.service';
 import { CompanyService } from '../company/company.service';
 import { ConfigService } from '../global/config/config.service';
 import { MathService } from '../global/math/math.service';
@@ -29,6 +26,7 @@ export class OrderService {
     private readonly inventoryService: InventoryService,
     private readonly productService: ProductService,
     private readonly companyService: CompanyService,
+    private readonly companyClientService: CompanyClientService,
     private readonly mathService: MathService,
     private readonly configService: ConfigService,
   ) {}
@@ -48,8 +46,27 @@ export class OrderService {
       inventory,
     );
 
-    const order = await this.repository.insertOrder(inventory);
+    const company = await this.companyService.getCompanyByUserId(identity);
+
+    const companyClient = await this.companyClientService.getCompanyClient(
+      dto.companyClientId,
+      company,
+    );
+
+    const orderCount = await this.repository.countOrdersByInventoryId(
+      inventory,
+    );
+
+    const orderNumber = `${orderCount + 1}/${new Date().getFullYear()}`;
+
+    const order = await this.repository.insertOrder(
+      inventory,
+      companyClient,
+      orderNumber,
+    );
+
     let grandTotal = 0;
+    let grandTotalTaxed = 0;
 
     try {
       if (products.length !== dto.order.length) {
@@ -83,6 +100,11 @@ export class OrderService {
           product.sellingPrice,
         );
 
+        const totalTaxed = this.mathService.add(
+          total,
+          this.mathService.calculatePercent(total, product.taxRate),
+        );
+
         grandTotal = this.mathService.add(grandTotal, total);
 
         const newQuantity = this.mathService.subtract(
@@ -94,6 +116,7 @@ export class OrderService {
           order,
           product,
           total,
+          totalTaxed,
           innerDto.quantity,
         );
 
@@ -104,7 +127,16 @@ export class OrderService {
         );
       }
 
-      await this.repository.updateOrderGrandTotal(order.id, grandTotal);
+      grandTotalTaxed = this.mathService.add(
+        grandTotal,
+        this.mathService.calculatePercent(grandTotal, 20),
+      );
+
+      await this.repository.updateOrderGrandTotal(
+        order.id,
+        grandTotal,
+        grandTotalTaxed,
+      );
     } catch (error) {
       console.log(error);
       throw error;
@@ -125,14 +157,14 @@ export class OrderService {
 
     const order = await this.repository.findOrderById(orderId, inventory);
 
-    const template = generateOrderInvoiceTemplate(company, order, '20/2021');
+    const template = generateOrderInvoiceTemplate(company, order);
 
     const { file } = await generatePDF(
       template,
       this.configService.getOrThrow(ConfigOption.CHROMIUM_EXE_PATH),
     );
 
-    const fileName = `'20/2021'.pdf`;
+    const fileName = `${order.orderNumber}.pdf`;
 
     return { file, fileName };
   }

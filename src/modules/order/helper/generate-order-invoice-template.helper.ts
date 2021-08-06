@@ -23,7 +23,6 @@ const translateUOM = (uoe: UnitOfMessure) => {
 export const generateOrderInvoiceTemplate = (
   company: Company,
   order: Order,
-  orderNumber: string,
 ) => {
   const date = new Date(order.createdAt);
   const formattedDate = `${date.getDate()}.${date.getMonth()}.${date.getFullYear()}`;
@@ -233,11 +232,11 @@ export const generateOrderInvoiceTemplate = (
   </head>
   <body class="A4">
     <section class="sheet padding-10mm">
-      <h2 class="title">${orderNumber}</h2>
+      <h2 class="title">${order.orderNumber}</h2>
 
       <div class="header">
         <div class="header-box">
-          <h6>IZDAVALAC RACUNA</h6>
+          <h6>IZDAVALAC RAČUNA</h6>
           <br />
           <h6>${company.name.toUpperCase()}</h6>
           <h6>${company.street.toUpperCase()}, ${
@@ -246,45 +245,45 @@ export const generateOrderInvoiceTemplate = (
           <br />
 
           <h6>PIB: ${company.taxIdNumber}</h6>
-          <h6>Maticni broj: ${company.companyNumber}</h6>
+          <h6>Matični broj: ${company.companyNumber}</h6>
           <br />
 
           <h6>Telefon: ${company.phoneMobileNumber}</h6>
-          <h6>Email: ${company.email}</h6>
+          <h6>E-mail: ${company.email}</h6>
           <br />
 
           <h6>Ime banke: ${company.bankName}</h6>
-          <h6>Tekuci racun: ${company.bankAccountNumber}</h6>
+          <h6>Tekući račun: ${company.bankAccountNumber}</h6>
         </div>
 
         <div class="header-box">
-          <h6>PRIMALAC RACUNA</h6>
+          <h6>PRIMALAC RAČUNA</h6>
           <br />
-          <h6>${company.name.toUpperCase()}</h6>
-          <h6>${company.street.toUpperCase()}, ${
+          <h6>${order.companyClient.name.toUpperCase()}</h6>
+          <h6>${order.companyClient.street.toUpperCase()}, ${
     company.postalCode
   } ${company.city.toUpperCase()}</h6>
           <br />
 
-          <h6>PIB: ${company.taxIdNumber}</h6>
-          <h6>Maticni broj: ${company.companyNumber}</h6>
+          <h6>PIB: ${order.companyClient.taxIdNumber}</h6>
+          <h6>Matični broj: ${order.companyClient.companyNumber}</h6>
           <br />
 
-          <h6>Telefon: ${company.phoneMobileNumber}</h6>
-          <h6>Email: ${company.email}</h6>
+          <h6>Telefon: ${order.companyClient.phoneMobileNumber}</h6>
+          <h6>E-mail: ${order.companyClient.email}</h6>
           <br />
 
-          <h6>Ime banke: ${company.bankName}</h6>
-          <h6>Tekuci racun: ${company.bankAccountNumber}</h6>
+          <h6>Ime banke: ${order.companyClient.bankName}</h6>
+          <h6>Tekući račun: ${order.companyClient.bankAccountNumber}</h6>
         </div>
       </div>
       <div class="date-info">
-        <h6>Racun broj: ${orderNumber}</h6>
+        <h6>Račun broj: ${order.orderNumber}</h6>
         <br />
         <h6>Datum prometa usluga: ${formattedDate}</h6>
-        <h6>Datum izdavanja racuna: ${formattedDate}</h6>
-        <h6>Mesto izdavanja racuna: ${company.city}</h6>
-        <h6>Mesto izdavanja racuna: ${company.city}</h6>
+        <h6>Datum izdavanja računa: ${formattedDate}</h6>
+        <h6>Mesto izdavanja računa: ${company.city}</h6>
+        <h6>Mesto izdavanja računa: ${company.city}</h6>
       </div>
       <table>
         <tr>
@@ -296,7 +295,7 @@ export const generateOrderInvoiceTemplate = (
             </h6>
           </th>
           <th><h6>jed mere</h6></th>
-          <th><h6>kilicina</h6></th>
+          <th><h6>količina</h6></th>
           <th><h6>cena bez PDV</h6></th>
           <th><h6>vrednost bez PDV</h6></th>
           <th><h6>osnovica za PDV</h6></th>
@@ -333,13 +332,8 @@ export const generateOrderInvoiceTemplate = (
         <td><h6>${productOrder.total}</h6></td>
         <td><h6>${productOrder.total}</h6></td>
         <td><h6>${productOrder.product.taxRate}</h6></td>
-        <td><h6>${
-          (productOrder.total / 100) * productOrder.product.taxRate
-        }</h6></td>
-        <td><h6>${
-          (productOrder.total / 100) * productOrder.product.taxRate +
-          productOrder.total
-        }</h6></td>
+        <td><h6>${productOrder.totalTaxed - productOrder.total}</h6></td>
+        <td><h6>${productOrder.totalTaxed}</h6></td>
         </tr>
         `,
           )
@@ -355,48 +349,36 @@ export const generateOrderInvoiceTemplate = (
             <th><h6>ukupna vrednost sa pdv</h6></th>
           </tr>
           <tr>
-            <th><h6>${order.productOrders.reduce(
-              (acc, order) => (acc += order.total),
-              0,
-            )}</h6></th>
-            <th><h6>${order.productOrders.reduce(
-              (acc, order) => (acc += order.total),
-              0,
-            )}</h6></th>
+            <th><h6>${order.total}</h6></th>
+            <th><h6>${order.total}</h6></th>
             <th><h6>20%</h6></th>
-            <th><h6>${
-              (order.productOrders.reduce(
-                (acc, order) => (acc += order.total),
-                0,
-              ) /
-                100) *
-              20
-            }</h6></th>
-            <th><h6>${
-              (order.productOrders.reduce(
-                (acc, order) => (acc += order.total),
-                0,
-              ) /
-                100) *
-                20 +
-              order.productOrders.reduce(
-                (acc, order) => (acc += order.total),
-                0,
-              )
-            }</h6></th>
+            <th><h6>${order.totalTaxed - order.total}</h6></th>
+            <th><h6>${order.totalTaxed}</h6></th>
           </tr>
         </table>
       </div>
       <div class="extra-info">
         <div class="extra-info-box">
           <h6>Podaci o odgovornom licu:</h6>
+          <br />
+          <h6>_________________________ M.P.</h6>
+          <h6>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<em>potpis</em></h6>
         </div>
+        <br />
         <div class="extra-info-box">
           <h6>Podaci o izdavaocu dobara:</h6>
+          <br />
+          <h6>_________________________ M.P.</h6>
+          <h6>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<em>potpis</em></h6>
         </div>
+        <br />
         <div class="extra-info-box">
           <h6>Podaci o primaocu dobara:</h6>
+          <br />
+          <h6>_________________________ M.P.</h6>
+          <h6>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<em>potpis</em></h6>
         </div>
+        <br />
         <div class="extra-info-box">
           <h6>Dodatne informacije:</h6>
         </div>

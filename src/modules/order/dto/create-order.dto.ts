@@ -1,10 +1,4 @@
-import {
-  IsArray,
-  IsNotEmpty,
-  IsNumber,
-  IsPositive,
-  ValidateNested,
-} from 'class-validator';
+import { IsArray, IsNotEmpty, IsNumber, IsPositive } from 'class-validator';
 
 import { ApiProperty } from '@nestjs/swagger';
 
@@ -31,6 +25,12 @@ export class CreateOrderDto {
     type: [CreateOrderInnerDto],
   })
   @IsArray()
-  // @ValidateNested({ each: true })
   public order: CreateOrderInnerDto[];
+
+  @ApiProperty({
+    required: true,
+  })
+  @IsNotEmpty()
+  @IsNumber()
+  public companyClientId: number;
 }

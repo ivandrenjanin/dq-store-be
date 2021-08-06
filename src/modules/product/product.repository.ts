@@ -9,6 +9,7 @@ import { ProductDetails } from '../../entities/product-details.entity';
 import { Product } from '../../entities/product.entity';
 import { CreateProductDetailsDto } from './dto/create-product-details.dto';
 import { CreateProductDto } from './dto/create-product.dto';
+import { UpdateProductDto } from './dto/update-product.dto';
 
 @EntityRepository()
 export class ProductRepository {
@@ -73,6 +74,18 @@ export class ProductRepository {
       Product,
       { id, inventory },
       { quantity },
+    );
+  }
+
+  public async updateProduct(
+    id: number,
+    inventory: Inventory,
+    dto: UpdateProductDto,
+  ): Promise<void> {
+    await this.entityManager.update<Product>(
+      Product,
+      { id, inventory },
+      { ...dto },
     );
   }
 

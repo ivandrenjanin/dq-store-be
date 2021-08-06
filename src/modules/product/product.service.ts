@@ -14,6 +14,7 @@ import { InventoryService } from '../inventory/inventory.service';
 import { CreateProductCategoryDto } from './dto/create-product-category.dto';
 import { CreateProductDetailsDto } from './dto/create-product-details.dto';
 import { CreateProductDto } from './dto/create-product.dto';
+import { UpdateProductDto } from './dto/update-product.dto';
 import { ProductRepository } from './product.repository';
 
 @Injectable()
@@ -82,29 +83,37 @@ export class ProductService {
     identity: User,
     dto: CreateProductCategoryDto,
   ): Promise<Product> {
-    try {
-      const inventory = await this.inventoryService.getInventoryById(
-        inventoryId,
-        identity,
-      );
+    const inventory = await this.inventoryService.getInventoryById(
+      inventoryId,
+      identity,
+    );
 
-      const product = await this.repository.findProductById(id, inventory);
+    const product = await this.getProductById(id, inventory);
 
-      if (!product) {
-        throw new NotFoundException();
-      }
+    const category = await this.categoryService.getCategoryById(
+      dto.categoryId,
+      inventory,
+    );
 
-      const category = await this.categoryService.getCategoryById(
-        dto.categoryId,
-        inventory,
-      );
+    await this.repository.insertProductCategory(product, category);
 
-      await this.repository.insertProductCategory(product, category);
+    return this.repository.findProductById(id, inventory);
+  }
 
-      return this.repository.findProductById(id, inventory);
-    } catch (error) {
-      console.log(error);
-    }
+  public async updateProduct(
+    inventoryId: number,
+    id: number,
+    identity: User,
+    dto: UpdateProductDto,
+  ): Promise<void> {
+    const inventory = await this.inventoryService.getInventoryById(
+      inventoryId,
+      identity,
+    );
+
+    await this.getProductById(id, inventory);
+
+    await this.repository.updateProduct(id, inventory, dto);
   }
 
   public async updateProductQuantity(
