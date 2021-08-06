@@ -330,16 +330,16 @@ export const generateOrderInvoiceTemplate = (
           productOrder.product.unitOfMessure,
         )}</h6></td>
         <td><h6 style="text-align:right;">${productOrder.quantity}</h6></td>
-        <td><h6 style="text-align:right;>${productOrder.total}</h6></td>
-        <td><h6 style="text-align:right;>${productOrder.total}</h6></td>
-        <td><h6 style="text-align:right;>${productOrder.total}</h6></td>
-        <td><h6 style="text-align:right;>${
+        <td><h6 style="text-align:right;">${productOrder.total}</h6></td>
+        <td><h6 style="text-align:right;">${productOrder.total}</h6></td>
+        <td><h6 style="text-align:right;">${productOrder.total}</h6></td>
+        <td><h6 style="text-align:right;">${
           productOrder.product.taxRate
         }</h6></td>
-        <td><h6 style="text-align:right;>${
+        <td><h6 style="text-align:right;">${
           productOrder.totalTaxed - productOrder.total
         }</h6></td>
-        <td><h6 style="text-align:right;>${productOrder.totalTaxed}</h6></td>
+        <td><h6 style="text-align:right;">${productOrder.totalTaxed}</h6></td>
         </tr>
         `,
           )
