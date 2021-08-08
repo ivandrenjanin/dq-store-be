@@ -1,6 +1,8 @@
 import { Company } from '../../../entities/company.entity';
 import { Order } from '../../../entities/order.entity';
 import { UnitOfMessure } from '../../../enums/unit-of-messure.enum';
+import { calculator } from '../../helper/calculator.helper';
+import { formatNumber } from '../../helper/format-number.helper';
 
 const translateUOM = (uoe: UnitOfMessure) => {
   switch (uoe) {
@@ -328,16 +330,24 @@ export const generateOrderInvoiceTemplate = (
         </td>
         <td><h6>${translateUOM(productOrder.product.unitOfMessure)}</h6></td>
         <td><h6>${productOrder.quantity}</h6></td>
-        <td><h6 style="text-align:right;">${productOrder.total}</h6></td>
-        <td><h6 style="text-align:right;">${productOrder.total}</h6></td>
-        <td><h6 style="text-align:right;">${productOrder.total}</h6></td>
+        <td><h6 style="text-align:right;">${formatNumber(
+          productOrder.total,
+        )}</h6></td>
+        <td><h6 style="text-align:right;">${formatNumber(
+          productOrder.total,
+        )}</h6></td>
+        <td><h6 style="text-align:right;">${formatNumber(
+          productOrder.total,
+        )}</h6></td>
         <td><h6 style="text-align:right;">${
           productOrder.product.taxRate
         }</h6></td>
-        <td><h6 style="text-align:right;">${
-          productOrder.totalTaxed - productOrder.total
-        }</h6></td>
-        <td><h6 style="text-align:right;">${productOrder.totalTaxed}</h6></td>
+        <td><h6 style="text-align:right;">${formatNumber(
+          calculator.subtract(productOrder.totalTaxed, productOrder.total),
+        )}</h6></td>
+        <td><h6 style="text-align:right;">${formatNumber(
+          productOrder.totalTaxed,
+        )}</h6></td>
         </tr>
         `,
           )
@@ -353,11 +363,13 @@ export const generateOrderInvoiceTemplate = (
             <th><h6>ukupna vrednost sa pdv</h6></th>
           </tr>
           <tr>
-            <th><h6>${order.total}</h6></th>
-            <th><h6>${order.total}</h6></th>
+            <th><h6>${formatNumber(order.total)}</h6></th>
+            <th><h6>${formatNumber(order.total)}</h6></th>
             <th><h6>20%</h6></th>
-            <th><h6>${order.totalTaxed - order.total}</h6></th>
-            <th><h6>${order.totalTaxed}</h6></th>
+            <th><h6>${formatNumber(
+              calculator.subtract(order.totalTaxed, order.total),
+            )}</h6></th>
+            <th><h6>${formatNumber(order.totalTaxed)}</h6></th>
           </tr>
         </table>
       </div>

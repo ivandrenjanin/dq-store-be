@@ -6,7 +6,6 @@ import {
   ManyToOne,
   OneToMany,
   AfterLoad,
-  BeforeInsert,
 } from 'typeorm';
 import { calculator } from '../modules/helper/calculator.helper';
 
@@ -54,12 +53,6 @@ export class Order extends BaseEntity {
     onDelete: 'CASCADE',
   })
   public productOrders!: ProductOrder[];
-
-  @BeforeInsert()
-  public convertToCent() {
-    this.total = calculator.toCent(this.total);
-    this.totalTaxed = calculator.toCent(this.totalTaxed);
-  }
 
   @AfterLoad()
   public convertFromCent() {

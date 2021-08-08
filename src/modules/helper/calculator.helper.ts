@@ -7,7 +7,7 @@ export const calculator = {
 
     const z = x.add(y);
 
-    return z.toNumber();
+    return z.toDecimalPlaces(2).toNumber();
   },
 
   subtract(a: number, b: number): number {
@@ -16,7 +16,7 @@ export const calculator = {
 
     const z = x.minus(y);
 
-    return z.toNumber();
+    return z.toDecimalPlaces(2).toNumber();
   },
 
   multiply(a: number, b: number): number {
@@ -25,7 +25,7 @@ export const calculator = {
 
     const z = x.mul(y);
 
-    return z.toNumber();
+    return z.toDecimalPlaces(2).toNumber();
   },
 
   calculatePercent(number: number, percent: number) {
@@ -46,6 +46,6 @@ export const calculator = {
   fromCent(number: number) {
     const x = new Decimal(number);
 
-    return x.dividedBy(1000).toNumber();
+    return x.dividedBy(1000).toDecimalPlaces(2).toNumber();
   },
 };

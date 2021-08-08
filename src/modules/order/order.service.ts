@@ -52,22 +52,22 @@ export class OrderService {
       company,
     );
 
-    const orderCount = await this.repository.countOrdersByInventoryId(
-      inventory,
-    );
-
-    const orderNumber = `${orderCount + 1}/${new Date().getFullYear()}`;
-
-    const order = await this.repository.insertOrder(
-      inventory,
-      companyClient,
-      orderNumber,
-    );
-
     let grandTotal = 0;
     let grandTotalTaxed = 0;
 
     try {
+      const orderCount = await this.repository.countOrdersByInventoryId(
+        inventory,
+      );
+
+      const orderNumber = `${orderCount + 1}/${new Date().getFullYear()}`;
+
+      const order = await this.repository.insertOrder(
+        inventory,
+        companyClient,
+        orderNumber,
+      );
+
       if (products.length !== dto.order.length) {
         throw new NotFoundException('PRODUCTS_NOT_FOUND');
       }
@@ -133,8 +133,8 @@ export class OrderService {
 
       await this.repository.updateOrderGrandTotal(
         order.id,
-        grandTotal,
-        grandTotalTaxed,
+        calculator.toCent(grandTotal),
+        calculator.toCent(grandTotalTaxed),
       );
     } catch (error) {
       console.log(error);
