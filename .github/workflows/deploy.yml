@@ -10,10 +10,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: 'Install Yarn'
-        run: npm i -g yarn
-      - name: 'Install pm2'
-        run: npm i -g pm2
       - name: SSH and deploy node app
         uses: appleboy/ssh-action@master
         with:
@@ -22,6 +18,8 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           port: ${{ secrets.SSH_PORT }}
           script: |
+            export NVM_DIR="$HOME/.nvm"
+            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
             cd dq-store-be/
             git pull origin master
             yarn install
