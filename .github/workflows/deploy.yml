@@ -18,9 +18,10 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           port: ${{ secrets.SSH_PORT }}
           script: |
-            cd ~/dq-store-be
+            cd dq-store-be/
             pm2 stop main
             git pull origin master
             yarn install
+            yarn build
             yarn typeorm migration:run
             pm2 start main
