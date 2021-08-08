@@ -13,7 +13,6 @@ import { ConfigService } from './config/config.service';
 import { PostgreSQLService } from './config/postgresql.service';
 import { EncryptionService } from './encryption/encryption.service';
 import { GlobalController } from './global.controller';
-import { MathService } from './math/math.service';
 
 @Global()
 @Module({
@@ -54,9 +53,8 @@ import { MathService } from './math/math.service';
       useClass: GlobalExceptionFilter,
     },
     EncryptionService,
-    MathService,
   ],
   controllers: [GlobalController],
-  exports: [ConfigService, EncryptionService, MathService],
+  exports: [ConfigService, EncryptionService],
 })
 export class GlobalModule {}

@@ -1,6 +1,15 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
+import {
+  AfterLoad,
+  BeforeInsert,
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+} from 'typeorm';
 import { UnitOfMessure } from '../enums/unit-of-messure.enum';
+import { calculator } from '../modules/helper/calculator.helper';
 
 import { BaseEntity } from './base';
 import { Entities } from './enum/entity.enum';
@@ -88,4 +97,18 @@ export class Product extends BaseEntity {
 
   @OneToMany(Entities.PRODUCT_ORDER, 'product')
   public productOrders!: ProductOrder[];
+
+  @BeforeInsert()
+  public convertToCent() {
+    this.primePrice = calculator.toCent(this.primePrice);
+    this.taxedPrice = calculator.toCent(this.taxedPrice);
+    this.sellingPrice = calculator.toCent(this.sellingPrice);
+  }
+
+  @AfterLoad()
+  public convertFromCent() {
+    this.primePrice = calculator.fromCent(this.primePrice);
+    this.taxedPrice = calculator.fromCent(this.taxedPrice);
+    this.sellingPrice = calculator.fromCent(this.sellingPrice);
+  }
 }

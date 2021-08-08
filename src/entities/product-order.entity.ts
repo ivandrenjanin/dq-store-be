@@ -1,11 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
+  AfterLoad,
+  BeforeInsert,
   Column,
   Entity,
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { calculator } from '../modules/helper/calculator.helper';
 
 import { Entities } from './enum/entity.enum';
 import { Order } from './order.entity';
@@ -44,4 +47,16 @@ export class ProductOrder {
   @ManyToOne(Entities.ORDER)
   @JoinColumn({ name: 'order_id' })
   public order!: Order;
+
+  @BeforeInsert()
+  public convertToCent() {
+    this.total = calculator.toCent(this.total);
+    this.totalTaxed = calculator.toCent(this.totalTaxed);
+  }
+
+  @AfterLoad()
+  public convertFromCent() {
+    this.total = calculator.fromCent(this.total);
+    this.totalTaxed = calculator.fromCent(this.totalTaxed);
+  }
 }

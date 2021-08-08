@@ -1,5 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  AfterLoad,
+  BeforeInsert,
+} from 'typeorm';
+import { calculator } from '../modules/helper/calculator.helper';
 
 import { BaseEntity } from './base';
 import { CompanyClient } from './company-client.entity';
@@ -45,4 +54,16 @@ export class Order extends BaseEntity {
     onDelete: 'CASCADE',
   })
   public productOrders!: ProductOrder[];
+
+  @BeforeInsert()
+  public convertToCent() {
+    this.total = calculator.toCent(this.total);
+    this.totalTaxed = calculator.toCent(this.totalTaxed);
+  }
+
+  @AfterLoad()
+  public convertFromCent() {
+    this.total = calculator.fromCent(this.total);
+    this.totalTaxed = calculator.fromCent(this.totalTaxed);
+  }
 }

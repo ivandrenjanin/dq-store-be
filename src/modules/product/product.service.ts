@@ -9,7 +9,7 @@ import { Inventory } from '../../entities/inventory.entity';
 import { Product } from '../../entities/product.entity';
 import { User } from '../../entities/user.entity';
 import { CategoryService } from '../category/category.service';
-import { MathService } from '../global/math/math.service';
+import { calculator } from '../helper/calculator.helper';
 import { InventoryService } from '../inventory/inventory.service';
 import { CreateProductCategoryDto } from './dto/create-product-category.dto';
 import { CreateProductDetailsDto } from './dto/create-product-details.dto';
@@ -24,7 +24,6 @@ export class ProductService {
     private readonly repository: ProductRepository,
     private readonly inventoryService: InventoryService,
     private readonly categoryService: CategoryService,
-    public readonly mathService: MathService,
   ) {}
 
   public async createProduct(
@@ -39,9 +38,9 @@ export class ProductService {
 
     const { sellingPrice, taxRate } = dto;
 
-    const taxedPrice = this.mathService.add(
+    const taxedPrice = calculator.add(
       sellingPrice,
-      this.mathService.calculatePercent(sellingPrice, taxRate),
+      calculator.calculatePercent(sellingPrice, taxRate),
     );
 
     const product = await this.repository.insertProduct(
@@ -66,7 +65,7 @@ export class ProductService {
 
     const product = await this.getProductById(id, inventory);
 
-    const newQuantity = this.mathService.add(product.quantity, dto.quantity);
+    const newQuantity = calculator.add(product.quantity, dto.quantity);
 
     if (newQuantity <= 0) {
       throw new BadRequestException();

@@ -1,5 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
+import {
+  AfterLoad,
+  BeforeInsert,
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+} from 'typeorm';
+import { calculator } from '../modules/helper/calculator.helper';
 import { BaseEntity } from './base';
 import { Entities } from './enum/entity.enum';
 import { Product } from './product.entity';
@@ -24,4 +32,14 @@ export class ProductDetails extends BaseEntity {
   @ManyToOne(Entities.PRODUCT)
   @JoinColumn({ name: 'product_id' })
   public product!: Product;
+
+  @BeforeInsert()
+  public convertToCent() {
+    this.primePrice = calculator.toCent(this.primePrice);
+  }
+
+  @AfterLoad()
+  public convertFromCent() {
+    this.primePrice = calculator.fromCent(this.primePrice);
+  }
 }

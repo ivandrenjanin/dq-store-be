@@ -10,7 +10,7 @@ import { ConfigOption } from '../../enums/config-option.enum';
 import { CompanyClientService } from '../company-client/company-client.service';
 import { CompanyService } from '../company/company.service';
 import { ConfigService } from '../global/config/config.service';
-import { MathService } from '../global/math/math.service';
+import { calculator } from '../helper/calculator.helper';
 import { InventoryService } from '../inventory/inventory.service';
 import { ProductService } from '../product/product.service';
 import { CreateOrderDto } from './dto/create-order.dto';
@@ -27,7 +27,6 @@ export class OrderService {
     private readonly productService: ProductService,
     private readonly companyService: CompanyService,
     private readonly companyClientService: CompanyClientService,
-    private readonly mathService: MathService,
     private readonly configService: ConfigService,
   ) {}
 
@@ -81,7 +80,7 @@ export class OrderService {
           throw new BadRequestException('NOT_ENOUGH_PRODUCTS');
         }
 
-        const newQuantity = this.mathService.subtract(
+        const newQuantity = calculator.subtract(
           product.quantity,
           innerDto.quantity,
         );
@@ -95,19 +94,19 @@ export class OrderService {
       for (const product of products) {
         const innerDto = dto.order.find((o) => o.productId === product.id);
 
-        const total = this.mathService.multiply(
+        const total = calculator.multiply(
           innerDto.quantity,
           product.sellingPrice,
         );
 
-        const totalTaxed = this.mathService.add(
+        const totalTaxed = calculator.add(
           total,
-          this.mathService.calculatePercent(total, product.taxRate),
+          calculator.calculatePercent(total, product.taxRate),
         );
 
-        grandTotal = this.mathService.add(grandTotal, total);
+        grandTotal = calculator.add(grandTotal, total);
 
-        const newQuantity = this.mathService.subtract(
+        const newQuantity = calculator.subtract(
           product.quantity,
           innerDto.quantity,
         );
@@ -127,9 +126,9 @@ export class OrderService {
         );
       }
 
-      grandTotalTaxed = this.mathService.add(
+      grandTotalTaxed = calculator.add(
         grandTotal,
-        this.mathService.calculatePercent(grandTotal, 20),
+        calculator.calculatePercent(grandTotal, 20),
       );
 
       await this.repository.updateOrderGrandTotal(
