@@ -1,7 +1,5 @@
 import { EntityManager, EntityRepository } from 'typeorm';
 
-import { UnprocessableEntityException } from '@nestjs/common';
-
 import { Category } from '../../entities/category.entity';
 import { Inventory } from '../../entities/inventory.entity';
 import { ProductCategory } from '../../entities/product-category.entity';
@@ -21,16 +19,6 @@ export class ProductRepository {
     inventory: Inventory,
   ): Promise<Product> {
     return await this.entityManager.transaction(async (txManager) => {
-      const { code } = dto;
-
-      const existing = await txManager.findOne<Product>(Product, {
-        where: { code, inventory },
-      });
-
-      if (existing) {
-        throw new UnprocessableEntityException();
-      }
-
       const product = await txManager.save<Product>(
         txManager.create<Product>(Product, { ...dto, taxedPrice, inventory }),
       );
