@@ -1,5 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
+import {
+  BeforeInsert,
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+} from 'typeorm';
+import { createCode } from '../modules/helper/create-code.helper';
 
 import { BaseEntity } from './base';
 import { Entities } from './enum/entity.enum';
@@ -28,4 +36,9 @@ export class Category extends BaseEntity {
 
   @OneToMany(Entities.PRODUCT_CATEGORY, 'category')
   public productCategories!: ProductCategory[];
+
+  @BeforeInsert()
+  public createCode() {
+    this.code = createCode();
+  }
 }

@@ -10,6 +10,7 @@ import {
 } from 'typeorm';
 import { UnitOfMessure } from '../enums/unit-of-messure.enum';
 import { calculator } from '../modules/helper/calculator.helper';
+import { createCode } from '../modules/helper/create-code.helper';
 
 import { BaseEntity } from './base';
 import { Entities } from './enum/entity.enum';
@@ -103,6 +104,11 @@ export class Product extends BaseEntity {
     this.primePrice = calculator.toCent(this.primePrice);
     this.taxedPrice = calculator.toCent(this.taxedPrice);
     this.sellingPrice = calculator.toCent(this.sellingPrice);
+  }
+
+  @BeforeInsert()
+  public createCode() {
+    this.code = createCode();
   }
 
   @AfterLoad()

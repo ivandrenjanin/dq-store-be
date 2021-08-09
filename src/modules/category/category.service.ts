@@ -22,14 +22,18 @@ export class CategoryService {
     identity: User,
     dto: CreateCategoryDto,
   ): Promise<Category> {
-    const inventory = await this.inventoryService.getInventoryById(
-      inventoryId,
-      identity,
-    );
+    try {
+      const inventory = await this.inventoryService.getInventoryById(
+        inventoryId,
+        identity,
+      );
 
-    const category = await this.repository.insertCategory(dto, inventory);
+      const category = await this.repository.insertCategory(dto, inventory);
 
-    return category;
+      return category;
+    } catch (e) {
+      console.error(e);
+    }
   }
 
   public async updateCategory(
@@ -38,16 +42,9 @@ export class CategoryService {
     identity: User,
     dto: UpdateCategoryDto,
   ): Promise<Category> {
-    const inventory = await this.inventoryService.getInventoryById(
-      inventoryId,
-      identity,
-    );
+    await this.inventoryService.getInventoryById(inventoryId, identity);
 
-    const category = await this.repository.updateCategory(
-      dto,
-      categoryId,
-      inventory,
-    );
+    const category = await this.repository.updateCategory(dto, categoryId);
 
     return category;
   }
