@@ -38,7 +38,7 @@ export class Product extends BaseEntity {
   @ApiProperty()
   @Column({
     name: 'selling_price',
-    type: 'int',
+    type: 'bigint',
     nullable: false,
   })
   public sellingPrice!: number;
@@ -46,7 +46,7 @@ export class Product extends BaseEntity {
   @ApiProperty()
   @Column({
     name: 'prime_price',
-    type: 'int',
+    type: 'bigint',
     nullable: false,
   })
   public primePrice!: number;
@@ -54,7 +54,7 @@ export class Product extends BaseEntity {
   @ApiProperty()
   @Column({
     name: 'taxed_price',
-    type: 'int',
+    type: 'bigint',
     nullable: false,
   })
   public taxedPrice!: number;

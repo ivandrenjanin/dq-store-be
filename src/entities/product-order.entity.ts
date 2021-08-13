@@ -21,14 +21,14 @@ export class ProductOrder {
 
   @ApiProperty()
   @Column({
-    type: 'int',
+    type: 'bigint',
     nullable: false,
   })
   public total!: number;
 
   @ApiProperty()
   @Column({
-    type: 'int',
+    type: 'bigint',
     nullable: false,
   })
   public totalTaxed!: number;

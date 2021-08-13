@@ -19,7 +19,7 @@ import { ProductOrder } from './product-order.entity';
 export class Order extends BaseEntity {
   @ApiProperty()
   @Column({
-    type: 'int',
+    type: 'bigint',
     default: 0,
     nullable: false,
   })
@@ -27,7 +27,7 @@ export class Order extends BaseEntity {
 
   @ApiProperty()
   @Column({
-    type: 'int',
+    type: 'bigint',
     default: 0,
     nullable: false,
   })
