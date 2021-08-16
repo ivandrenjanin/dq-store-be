@@ -6,16 +6,14 @@ import {
 } from '@nestjs/common';
 
 import { User } from '../../entities/user.entity';
-import { ConfigOption } from '../../enums/config-option.enum';
 import { CompanyClientService } from '../company-client/company-client.service';
 import { CompanyService } from '../company/company.service';
-import { ConfigService } from '../global/config/config.service';
 import { calculator } from '../helper/calculator.helper';
 import { InventoryService } from '../inventory/inventory.service';
+import { PdfGeneratorService } from '../pdf-generator/pdf-generator.service';
+import { PdfTemplateGeneratorService } from '../pdf-generator/pdf-template-generator.service';
 import { ProductService } from '../product/product.service';
 import { CreateOrderDto } from './dto/create-order.dto';
-import { generateOrderInvoiceTemplate } from './helper/generate-order-invoice-template.helper';
-import { generatePDF } from './helper/generate-pdf.helper';
 import { OrderRepository } from './order.repository';
 
 @Injectable()
@@ -27,7 +25,8 @@ export class OrderService {
     private readonly productService: ProductService,
     private readonly companyService: CompanyService,
     private readonly companyClientService: CompanyClientService,
-    private readonly configService: ConfigService,
+    private readonly pdf: PdfGeneratorService,
+    private readonly template: PdfTemplateGeneratorService,
   ) {}
 
   public async createOrder(
@@ -147,24 +146,28 @@ export class OrderService {
     orderId: number,
     identity: User,
   ): Promise<{ file: Buffer; fileName: string }> {
-    const company = await this.companyService.getCompanyByUserId(identity);
+    try {
+      const company = await this.companyService.getCompanyByUserId(identity);
 
-    const inventory = await this.inventoryService.getInventoryById(
-      inventoryId,
-      identity,
-    );
+      const inventory = await this.inventoryService.getInventoryById(
+        inventoryId,
+        identity,
+      );
 
-    const order = await this.repository.findOrderById(orderId, inventory);
+      const order = await this.repository.findOrderById(orderId, inventory);
 
-    const template = generateOrderInvoiceTemplate(company, order);
+      const template = this.template.generateOrderInvoicePdfTemplate(
+        company,
+        order,
+      );
 
-    const { file } = await generatePDF(
-      template,
-      this.configService.getOrThrow(ConfigOption.CHROMIUM_EXE_PATH),
-    );
+      const { file } = await this.pdf.generatePdfFromString(template);
 
-    const fileName = `${order.orderNumber}.pdf`;
+      const fileName = `${order.orderNumber}.pdf`;
 
-    return { file, fileName };
+      return { file, fileName };
+    } catch (error) {
+      console.log(error);
+    }
   }
 }
