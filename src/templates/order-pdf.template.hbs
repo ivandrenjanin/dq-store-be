@@ -1,0 +1,137 @@
+{{#>pdf}}
+<style>
+  @media print { .title { text-align: center; } .header { margin: 5mm 0;
+  display: flex; justify-content: center; flex-direction: row; } .header-box {
+  padding: 3mm; border: 0.1mm dotted black; flex-grow: 1; }
+  .header-box:first-child { border-right: none; } .date-info { margin-bottom:
+  5mm; } .date-info h6 { margin-bottom: 0.5mm; } .date-info h6:first-child {
+  margin-bottom: 0; text-align: center; } th { border: 1mm solid black;
+  text-align: left; } table, th { border-collapse: collapse; } th { padding: 1mm
+  0.2mm; text-align: center; border: 0.1mm solid black; } td { padding: 1mm;
+  text-align: center; } .info-table { margin-top: 25mm; width: 130mm;
+  align-self: flex-end; } .info-table table { width: 100%; } .extra-info {
+  display: flex; flex-direction: column; margin-top: 15mm; } .extra-info-box {
+  height: 16mm; } }
+</style>
+<h2 class='title'>{{order.orderNumber}}</h2>
+
+<div class='header'>
+  <div class='header-box'>
+    <h6>IZDAVALAC RAČUNA</h6>
+    <br />
+    <h6>{{company.name}}</h6>
+    <h6>{{company.street}},
+      {{company.postalCode}}
+      {{company.city}}</h6>
+    <br />
+
+    <h6>PIB: {{company.taxIdNumber}}</h6>
+    <h6>Matični broj: {{company.companyNumber}}</h6>
+    <br />
+
+    <h6>Telefon: {{company.phoneMobileNumber}}</h6>
+    <h6>E-mail: {{company.email}}</h6>
+    <br />
+
+    <h6>Ime banke: {{company.bankName}}</h6>
+    <h6>Tekući račun: {{company.bankAccountNumber}}</h6>
+  </div>
+
+  <div class='header-box'>
+    <h6>PRIMALAC RAČUNA</h6>
+    <br />
+    <h6>{{order.companyClient.name}}</h6>
+    <h6>{{order.companyClient.street}},
+      {{company.postalCode}}
+      {{company.city}}</h6>
+    <br />
+
+    <h6>PIB: {{order.companyClient.taxIdNumber}}</h6>
+    <h6>Matični broj: {{order.companyClient.companyNumber}}</h6>
+    <br />
+
+    <h6>Telefon: {{order.companyClient.phoneMobileNumber}}</h6>
+    <h6>E-mail: {{order.companyClient.email}}</h6>
+    <br />
+
+    <h6>Ime banke: {{order.companyClient.bankName}}</h6>
+    <h6>Tekući račun: {{order.companyClient.bankAccountNumber}}</h6>
+  </div>
+</div>
+<div class='date-info'>
+  <h6>Račun broj: {{order.orderNumber}}</h6>
+  <br />
+  <h6>Datum prometa usluga: {{formattedDate}}</h6>
+  <h6>Datum izdavanja računa: {{formattedDate}}</h6>
+  <h6>Mesto izdavanja računa: {{company.city}}</h6>
+  <h6>Mesto izdavanja računa: {{company.city}}</h6>
+</div>
+<table>
+  <tr>
+    <th><h6>r.br</h6></th>
+    <th>
+      <h6>
+        VRSTA - NAZIV
+        <br />
+        DOBARA - USLUGA
+      </h6>
+    </th>
+    <th><h6>jed mere</h6></th>
+    <th><h6>količina</h6></th>
+    <th><h6>cena bez PDV</h6></th>
+    <th><h6>vrednost bez PDV</h6></th>
+    <th><h6>osnovica za PDV</h6></th>
+    <th><h6>stopa PDV</h6></th>
+    <th><h6>iznos PDV</h6></th>
+    <th><h6>vrednost sa PDV</h6></th>
+  </tr>
+  <tr>
+    <th><h6>-</h6></th>
+    <th>
+      <h6>-</h6>
+    </th>
+    <th><h6>-</h6></th>
+    <th><h6>-</h6></th>
+    <th><h6>rsd</h6></th>
+    <th><h6>rsd</h6></th>
+    <th><h6>rsd</h6></th>
+    <th><h6>%</h6></th>
+    <th><h6>rsd</h6></th>
+    <th><h6>rsd</h6></th>
+  </tr>
+  {{#each order.productOrders}}
+    <tr>
+      <td><h6>{{this.order}}.</h6></td>
+      <td>
+        <h6 style='text-align:left;'>{{this.product.name}}</h6>
+      </td>
+      <td><h6>{{this.product.unitOfMessure}}</h6></td>
+      <td><h6>{{this.quantity}}</h6></td>
+      <td><h6 style='text-align:right;'>{{this.product.sellingPrice}}</h6></td>
+      <td><h6 style='text-align:right;'>{{this.total}}</h6></td>
+      <td><h6 style='text-align:right;'>{{this.total}}</h6></td>
+      <td><h6 style='text-align:right;'>{{this.product.taxRate}}</h6></td>
+      <td><h6 style='text-align:right;'>{{this.diffTax}}</h6></td>
+      <td><h6 style='text-align:right;'>{{this.totalTaxed}}</h6></td>
+    </tr>
+  {{/each}}
+</table>
+<div class='info-table'>
+  <table>
+    <tr>
+      <th><h6>vrednost bez pdv</h6></th>
+      <th><h6>osnovica za pdv</h6></th>
+      <th><h6>stopa pdv</h6></th>
+      <th><h6>iznos pdv</h6></th>
+      <th><h6>ukupna vrednost sa pdv</h6></th>
+    </tr>
+    <tr>
+      <th><h6>{{order.total}}</h6></th>
+      <th><h6>{{order.total}}</h6></th>
+      <th><h6>20%</h6></th>
+      <th><h6>{{order.diffTax}}</h6></th>
+      <th><h6>{{order.totalTaxed}}</h6></th>
+    </tr>
+  </table>
+</div>
+{{/pdf}}

@@ -8,6 +8,7 @@ import { CompanyModule } from './modules/company/company.module';
 import { GlobalModule } from './modules/global/global.module';
 import { InventoryModule } from './modules/inventory/inventory.module';
 import { OrderModule } from './modules/order/order.module';
+import { PdfGeneratorModule } from './modules/pdf-generator/pdf-generator.module';
 import { ProductModule } from './modules/product/product.module';
 import { UserModule } from './modules/user/user.module';
 
@@ -23,6 +24,7 @@ import { UserModule } from './modules/user/user.module';
     OrderModule,
     CompanyClientModule,
     BankInfoModule,
+    PdfGeneratorModule,
   ],
   controllers: [],
   providers: [],
