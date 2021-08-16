@@ -39,6 +39,6 @@ export class Category extends BaseEntity {
 
   @BeforeInsert()
   public createCode() {
-    this.code = createCode();
+    this.code = createCode().toUpperCase();
   }
 }

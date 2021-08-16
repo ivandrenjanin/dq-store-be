@@ -108,7 +108,7 @@ export class Product extends BaseEntity {
 
   @BeforeInsert()
   public createCode() {
-    this.code = createCode();
+    this.code = createCode().toUpperCase();
   }
 
   @AfterLoad()
