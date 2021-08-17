@@ -110,9 +110,37 @@ export class ProductService {
       identity,
     );
 
-    await this.getProductById(id, inventory);
+    const product = await this.getProductById(id, inventory);
 
-    await this.repository.updateProduct(id, inventory, dto);
+    if (dto.sellingPrice) {
+      const { sellingPrice } = dto;
+
+      const taxedPrice = calculator.add(
+        sellingPrice,
+        calculator.calculatePercent(sellingPrice, product.taxRate),
+      );
+      await this.repository.updateProduct(id, inventory, {
+        sellingPrice: calculator.toCent(sellingPrice),
+        taxedPrice: calculator.toCent(taxedPrice),
+      });
+    } else if (dto.taxRate) {
+      const { taxRate } = dto;
+
+      const taxedPrice = calculator.add(
+        product.sellingPrice,
+        calculator.calculatePercent(product.sellingPrice, taxRate),
+      );
+      await this.repository.updateProduct(id, inventory, {
+        ...dto,
+        taxedPrice: calculator.toCent(taxedPrice),
+      });
+    } else if (dto.primePrice) {
+      await this.repository.updateProduct(id, inventory, {
+        primePrice: calculator.toCent(dto.primePrice),
+      });
+    } else {
+      await this.repository.updateProduct(id, inventory, dto);
+    }
   }
 
   public async updateProductQuantity(

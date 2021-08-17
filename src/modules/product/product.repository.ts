@@ -68,7 +68,7 @@ export class ProductRepository {
   public async updateProduct(
     id: number,
     inventory: Inventory,
-    dto: UpdateProductDto,
+    dto: Partial<Product>,
   ): Promise<void> {
     await this.entityManager.update<Product>(
       Product,
