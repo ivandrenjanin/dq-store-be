@@ -24,7 +24,7 @@ export class PostgreSQLService implements TypeOrmOptionsFactory {
         )}/*.entity{.ts,.js}`,
       ],
       migrationsRun: true,
-      logging: true,
+      logging: false,
       synchronize: false,
     };
   }

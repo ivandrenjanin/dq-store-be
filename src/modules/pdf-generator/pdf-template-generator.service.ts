@@ -54,7 +54,6 @@ export class PdfTemplateGeneratorService {
       formattedDate,
       order: formattedOrder,
     });
-
     return doc;
   }
 

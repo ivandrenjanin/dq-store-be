@@ -27,6 +27,14 @@ export class Company extends BaseEntity {
 
   @ApiProperty()
   @Column({
+    name: 'logo',
+    type: String,
+    nullable: true,
+  })
+  public logo?: string;
+
+  @ApiProperty()
+  @Column({
     name: 'street',
     type: String,
     nullable: true,
