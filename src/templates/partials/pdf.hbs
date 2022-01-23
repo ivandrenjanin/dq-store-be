@@ -6,6 +6,10 @@
   <meta name='viewport' content='width=device-width, initial-scale=1.0' />
   <title>Document</title>
   <style>
+    html {
+      -webkit-print-color-adjust: exact
+    }
+
     h1,
     h2,
     h3,
@@ -26,27 +30,23 @@
     }
 
     body {
-      margin:
-        0;
+      margin: 0;
     }
 
     .sheet {
       margin: 0;
       overflow: hidden;
       position: relative;
-      box-sizing:
-        border-box;
+      box-sizing: border-box;
       page-break-after: always;
       display: flex;
-      flex-direction:
-        column;
+      flex-direction: column;
     }
 
     /** Paper sizes **/
     body.A3 .sheet {
       width: 297mm;
-      height:
-        419mm;
+      height: 419mm;
     }
 
     body.A3.landscape .sheet {
@@ -60,8 +60,7 @@
     }
 
     body.A4.landscape .sheet {
-      width:
-        297mm;
+      width: 297mm;
       height: 209mm;
     }
 
@@ -87,8 +86,7 @@
 
     body.legal .sheet {
       width: 216mm;
-      height:
-        356mm;
+      height: 356mm;
     }
 
     body.legal.landscape .sheet {
@@ -107,8 +105,7 @@
     }
 
     .sheet.padding-20mm {
-      padding:
-        20mm;
+      padding: 20mm;
     }
 
     .sheet.padding-25mm {
@@ -132,8 +129,7 @@
       for Chrome issue #273306 **/
     @media print {
       body.A3.landscape {
-        width:
-          420mm;
+        width: 420mm;
       }
 
       body.A3,

@@ -51,12 +51,6 @@ export class OrderController {
     @Param('orderId') orderId: number,
     @GetIdentity() identity: User,
   ) {
-    const { file, fileName } = await this.service.getOrderInvoice(
-      inventoryId,
-      orderId,
-      identity,
-    );
-
-    return { file: file.toString('base64'), fileName };
+    return this.service.getOrderInvoice(inventoryId, orderId, identity);
   }
 }

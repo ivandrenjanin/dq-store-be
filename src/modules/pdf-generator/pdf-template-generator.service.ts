@@ -54,6 +54,8 @@ export class PdfTemplateGeneratorService {
       formattedDate,
       order: formattedOrder,
     });
+
+    fs.writeFileSync('./index2.html', doc);
     return doc;
   }
 

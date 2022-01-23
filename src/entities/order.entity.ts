@@ -40,6 +40,20 @@ export class Order extends BaseEntity {
   })
   public orderNumber!: string;
 
+  @ApiProperty()
+  @Column({
+    type: String,
+    nullable: true,
+  })
+  public filePath!: string;
+
+  @ApiProperty()
+  @Column({
+    type: String,
+    nullable: true,
+  })
+  public fileName!: string;
+
   @ManyToOne(Entities.INVENTORY)
   @JoinColumn({ name: 'inventory_id' })
   public inventory!: Inventory;

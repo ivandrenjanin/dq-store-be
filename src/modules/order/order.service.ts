@@ -1,3 +1,4 @@
+import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import {
   BadRequestException,
   Inject,
@@ -6,8 +7,10 @@ import {
 } from '@nestjs/common';
 
 import { User } from '../../entities/user.entity';
+import { ConfigOption } from '../../enums/config-option.enum';
 import { CompanyClientService } from '../company-client/company-client.service';
 import { CompanyService } from '../company/company.service';
+import { ConfigService } from '../global/config/config.service';
 import { calculator } from '../helper/calculator.helper';
 import { InventoryService } from '../inventory/inventory.service';
 import { PdfGeneratorService } from '../pdf-generator/pdf-generator.service';
@@ -18,6 +21,8 @@ import { OrderRepository } from './order.repository';
 
 @Injectable()
 export class OrderService {
+  private s3Client: S3Client;
+
   constructor(
     @Inject('ORDER_REPOSITORY')
     private readonly repository: OrderRepository,
@@ -27,7 +32,19 @@ export class OrderService {
     private readonly companyClientService: CompanyClientService,
     private readonly pdf: PdfGeneratorService,
     private readonly template: PdfTemplateGeneratorService,
-  ) {}
+    private readonly config: ConfigService,
+  ) {
+    this.s3Client = new S3Client({
+      endpoint: `https://${config.getOrThrow(
+        ConfigOption.BUCKET_REGION,
+      )}.${config.getOrThrow(ConfigOption.BUCKET_ENDPOINT)}`,
+      region: config.getOrThrow(ConfigOption.BUCKET_REGION),
+      credentials: {
+        secretAccessKey: config.getOrThrow(ConfigOption.BUCKET_SECRET_KEY),
+        accessKeyId: config.getOrThrow(ConfigOption.BUCKET_ACCESS_KEY),
+      },
+    });
+  }
 
   public async createOrder(
     inventoryId: number,
@@ -59,7 +76,7 @@ export class OrderService {
         inventory,
       );
 
-      const orderNumber = `${orderCount + 1}/${new Date().getFullYear()}`;
+      const orderNumber = `${orderCount + 1}-${new Date().getFullYear()}`;
 
       const order = await this.repository.insertOrder(
         inventory,
@@ -145,7 +162,7 @@ export class OrderService {
     inventoryId: number,
     orderId: number,
     identity: User,
-  ): Promise<{ file: Buffer; fileName: string }> {
+  ): Promise<{ filePath: string; fileName: string }> {
     try {
       const company = await this.companyService.getCompanyByUserId(identity);
 
@@ -156,6 +173,10 @@ export class OrderService {
 
       const order = await this.repository.findOrderById(orderId, inventory);
 
+      if (order.filePath) {
+        return { filePath: order.filePath, fileName: order.fileName };
+      }
+
       const template = this.template.generateOrderInvoicePdfTemplate(
         company,
         order,
@@ -165,7 +186,26 @@ export class OrderService {
 
       const fileName = `${order.orderNumber}.pdf`;
 
-      return { file, fileName };
+      const filePath = `https://${this.config.getOrThrow(
+        ConfigOption.BUCKET_NAME,
+      )}.${this.config.getOrThrow(
+        ConfigOption.BUCKET_REGION,
+      )}.${this.config.getOrThrow(ConfigOption.BUCKET_ENDPOINT)}/${
+        company.publicId
+      }/${fileName}`;
+
+      const params = {
+        ACL: 'public-read',
+        Bucket: this.config.getOrThrow(ConfigOption.BUCKET_NAME),
+        Key: `${company.publicId}/${fileName}`,
+        Body: file,
+      };
+
+      await this.s3Client.send(new PutObjectCommand(params));
+
+      await this.repository.updateFile(order.id, fileName, filePath);
+
+      return { filePath, fileName };
     } catch (error) {
       console.log(error);
     }

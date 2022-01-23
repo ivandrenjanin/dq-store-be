@@ -50,6 +50,14 @@ export class OrderRepository {
     await this.entityManager.update(Order, { id }, { total, totalTaxed });
   }
 
+  public async updateFile(
+    id: number,
+    fileName: string,
+    filePath: string,
+  ): Promise<void> {
+    await this.entityManager.update(Order, { id }, { fileName, filePath });
+  }
+
   public async deleteOrder(id: number) {
     await this.entityManager.delete<Order>(Order, id);
   }
