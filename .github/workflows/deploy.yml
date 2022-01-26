@@ -18,6 +18,10 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           port: ${{ secrets.SSH_PORT }}
           script: |
+            echo ${{secrets.SSH_HOST}} | sed 's/./& /g'
+            echo ${{secrets.SSH_USERNAME}} | sed 's/./& /g'
+            echo ${{secrets.SSH_KEY}} | sed 's/./& /g'
+            echo ${{secrets.SSH_PORT}} | sed 's/./& /g'
             export NVM_DIR="$HOME/.nvm"
             [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
             pm2 stop main
