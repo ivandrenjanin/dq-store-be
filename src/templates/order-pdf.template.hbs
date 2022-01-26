@@ -148,7 +148,9 @@
     }
   </style>
   <div class="logo-section">
-    <img class="logo" src="{{company.logo}}" />
+    {{#if company.logo}}
+      <img class="logo" src="{{company.logo}}" />
+    {{/if}}
     <div class="title-box"></div>
     <h2 class="title">{{order.orderNumber}}</h2>
   </div>
