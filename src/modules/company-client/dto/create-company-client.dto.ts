@@ -16,21 +16,7 @@ export class CreateCompanyClientDto {
   })
   @IsNotEmpty()
   @IsString()
-  @MinLength(1)
-  @MaxLength(100)
   public name!: string;
-
-  @ApiProperty({
-    minLength: 1,
-    maxLength: 100,
-    required: true,
-  })
-  @IsOptional()
-  @IsNotEmpty()
-  @IsString()
-  @MinLength(1)
-  @MaxLength(100)
-  public postalCode!: string;
 
   @ApiProperty({
     minLength: 1,
@@ -40,8 +26,16 @@ export class CreateCompanyClientDto {
   @IsOptional()
   @IsNotEmpty()
   @IsString()
-  @MinLength(1)
-  @MaxLength(100)
+  public postalCode?: string;
+
+  @ApiProperty({
+    minLength: 1,
+    maxLength: 100,
+    required: false,
+  })
+  @IsOptional()
+  @IsNotEmpty()
+  @IsString()
   public streetNumber?: string;
 
   @ApiProperty({
@@ -52,8 +46,6 @@ export class CreateCompanyClientDto {
   @IsOptional()
   @IsNotEmpty()
   @IsString()
-  @MinLength(1)
-  @MaxLength(100)
   public street?: string;
 
   @ApiProperty({
@@ -64,33 +56,7 @@ export class CreateCompanyClientDto {
   @IsOptional()
   @IsNotEmpty()
   @IsString()
-  @MinLength(1)
-  @MaxLength(100)
   public city?: string;
-
-  @ApiProperty({
-    minLength: 1,
-    maxLength: 100,
-    required: true,
-  })
-  @IsOptional()
-  @IsNotEmpty()
-  @IsString()
-  @MinLength(1)
-  @MaxLength(100)
-  public taxIdNumber!: string;
-
-  @ApiProperty({
-    minLength: 1,
-    maxLength: 100,
-    required: true,
-  })
-  @IsOptional()
-  @IsNotEmpty()
-  @IsString()
-  @MinLength(1)
-  @MaxLength(100)
-  public companyNumber!: string;
 
   @ApiProperty({
     minLength: 1,
@@ -100,8 +66,26 @@ export class CreateCompanyClientDto {
   @IsOptional()
   @IsNotEmpty()
   @IsString()
-  @MinLength(1)
-  @MaxLength(100)
+  public taxIdNumber?: string;
+
+  @ApiProperty({
+    minLength: 1,
+    maxLength: 100,
+    required: false,
+  })
+  @IsOptional()
+  @IsNotEmpty()
+  @IsString()
+  public companyNumber?: string;
+
+  @ApiProperty({
+    minLength: 1,
+    maxLength: 100,
+    required: false,
+  })
+  @IsOptional()
+  @IsNotEmpty()
+  @IsString()
   public bankName?: string;
 
   @ApiProperty({
@@ -112,8 +96,6 @@ export class CreateCompanyClientDto {
   @IsOptional()
   @IsNotEmpty()
   @IsString()
-  @MinLength(1)
-  @MaxLength(100)
   public bankAccountNumber?: string;
 
   @ApiProperty({
@@ -124,8 +106,6 @@ export class CreateCompanyClientDto {
   @IsOptional()
   @IsNotEmpty()
   @IsString()
-  @MinLength(1)
-  @MaxLength(100)
   public phoneFaxNumber?: string;
 
   @ApiProperty({
@@ -136,8 +116,6 @@ export class CreateCompanyClientDto {
   @IsOptional()
   @IsNotEmpty()
   @IsString()
-  @MinLength(1)
-  @MaxLength(100)
   public phoneMobileNumber?: string;
 
   @ApiProperty({
@@ -149,7 +127,5 @@ export class CreateCompanyClientDto {
   @IsNotEmpty()
   @IsString()
   @IsEmail()
-  @MinLength(1)
-  @MaxLength(100)
   public email?: string;
 }
