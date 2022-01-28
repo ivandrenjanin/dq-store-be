@@ -17,30 +17,31 @@ export class CompanyClient extends BaseEntity {
   @ApiProperty()
   @Column({
     name: 'postal_code',
-    type: String,
     nullable: true,
+    type: String,
   })
   public postalCode?: string;
 
   @ApiProperty()
   @Column({
     name: 'street',
-    type: String,
     nullable: true,
+    type: String,
   })
   public street?: string;
 
   @ApiProperty()
   @Column({
     name: 'city',
-    type: String,
     nullable: true,
+    type: String,
   })
   public city?: string;
 
   @ApiProperty()
   @Column({
     name: 'tax_id_number',
+    nullable: true,
     type: String,
   })
   public taxIdNumber!: string;
@@ -48,6 +49,7 @@ export class CompanyClient extends BaseEntity {
   @ApiProperty()
   @Column({
     name: 'company_number',
+    nullable: true,
     type: String,
   })
   public companyNumber!: string;

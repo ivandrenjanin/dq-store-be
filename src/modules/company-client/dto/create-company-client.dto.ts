@@ -25,6 +25,7 @@ export class CreateCompanyClientDto {
     maxLength: 100,
     required: true,
   })
+  @IsOptional()
   @IsNotEmpty()
   @IsString()
   @MinLength(1)
@@ -72,6 +73,7 @@ export class CreateCompanyClientDto {
     maxLength: 100,
     required: true,
   })
+  @IsOptional()
   @IsNotEmpty()
   @IsString()
   @MinLength(1)
@@ -83,6 +85,7 @@ export class CreateCompanyClientDto {
     maxLength: 100,
     required: true,
   })
+  @IsOptional()
   @IsNotEmpty()
   @IsString()
   @MinLength(1)
