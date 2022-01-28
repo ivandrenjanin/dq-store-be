@@ -17,8 +17,8 @@ import { User } from '../../entities/user.entity';
 import { IdentityPermissionRole } from '../../enums/identity-role.enum';
 import { JwtAuthGuard } from '../../guards/jwt-auth.guard';
 import { RolesGuard } from '../../guards/roles.guard';
-import { CreateCompanyDto } from '../company/dto/create-company.dto';
 import { CompanyClientService } from './company-client.service';
+import { CreateCompanyClientDto } from './dto/create-company-client.dto';
 import { UpdateCompanyClientDto } from './dto/update-company-client.dto';
 
 ApiBearerAuth();
@@ -53,7 +53,7 @@ export class CompanyClientController {
     type: CompanyClient,
   })
   public createCompanyClient(
-    @Body() dto: CreateCompanyDto,
+    @Body() dto: CreateCompanyClientDto,
     @GetIdentity() identity: User,
   ): Promise<CompanyClient> {
     return this.service.createCompanyClient(dto, identity);
