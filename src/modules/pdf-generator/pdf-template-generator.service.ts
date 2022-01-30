@@ -9,6 +9,7 @@ import { Order } from '../../entities/order.entity';
 import { UnitOfMessure } from '../../enums/unit-of-messure.enum';
 import { calculator } from '../helper/calculator.helper';
 import { formatNumber } from '../helper/format-number.helper';
+import { DateTime } from 'luxon';
 
 @Injectable()
 export class PdfTemplateGeneratorService {
@@ -16,8 +17,10 @@ export class PdfTemplateGeneratorService {
     company: Company,
     order: Order,
   ): string {
-    const date = new Date(order.createdAt);
-    const formattedDate = `${date.getDate()}.${date.getMonth()}.${date.getFullYear()}`;
+    const date = DateTime.fromJSDate(new Date(order.createdAt));
+
+    const formattedDate = date.toFormat('dd.LL.yyyy.');
+
     const formattedOrder = {
       ...order,
       total: formatNumber(order.total),
@@ -55,7 +58,6 @@ export class PdfTemplateGeneratorService {
       order: formattedOrder,
     });
 
-    fs.writeFileSync('./index2.html', doc);
     return doc;
   }
 

@@ -166,12 +166,11 @@
     <br />
     <h6>{{order.companyClient.name}}</h6>
     <h6>{{order.companyClient.street}},
-      {{company.postalCode}}
-      {{company.city}}
+      {{order.companyClient.postalCode}}
+      {{order.companyClient.city}}
     </h6>
+    <h6>MB: {{order.companyClient.companyNumber}}</h6>
     <h6>PIB: {{order.companyClient.taxIdNumber}}</h6>
-    <h6>Telefon: {{order.companyClient.phoneMobileNumber}}</h6>
-    <h6>E-mail: {{order.companyClient.email}}</h6>
   </div>
   <hr />
   <div class='date-info'>
