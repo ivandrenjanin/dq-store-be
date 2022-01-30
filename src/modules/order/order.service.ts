@@ -177,7 +177,7 @@ export class OrderService {
         return { filePath: order.filePath, fileName: order.fileName };
       }
 
-      const template = this.template.generateOrderInvoicePdfTemplate(
+      const template = await this.template.generateOrderInvoicePdfTemplate(
         company,
         order,
       );

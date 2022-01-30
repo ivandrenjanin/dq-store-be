@@ -1,4 +1,4 @@
-import * as fs from 'fs';
+import * as fs from 'fs/promises';
 import * as hbs from 'hbs';
 import * as path from 'path';
 
@@ -13,10 +13,10 @@ import { DateTime } from 'luxon';
 
 @Injectable()
 export class PdfTemplateGeneratorService {
-  public generateOrderInvoicePdfTemplate(
+  public async generateOrderInvoicePdfTemplate(
     company: Company,
     order: Order,
-  ): string {
+  ): Promise<string> {
     const date = DateTime.fromJSDate(new Date(order.createdAt));
 
     const formattedDate = date.toFormat('dd.LL.yyyy.');
@@ -46,7 +46,7 @@ export class PdfTemplateGeneratorService {
         })),
     };
 
-    const template = this.compileHbs(
+    const template = await this.compileHbs(
       'pdf',
       'pdf.hbs',
       'order-pdf.template.hbs',
@@ -61,19 +61,19 @@ export class PdfTemplateGeneratorService {
     return doc;
   }
 
-  private compileHbs(
+  private async compileHbs(
     partialName: string,
     partial: string,
     template: string,
-  ): HandlebarsTemplateDelegate {
-    const partialFile = fs.readFileSync(
+  ): Promise<HandlebarsTemplateDelegate> {
+    const partialFile = await fs.readFile(
       path.join(__dirname, '..', '..', 'templates', 'partials', partial),
       'utf-8',
     );
 
     hbs.registerPartial(partialName, partialFile);
 
-    const templateFile = fs.readFileSync(
+    const templateFile = await fs.readFile(
       path.join(__dirname, '..', '..', 'templates', template),
       'utf-8',
     );
