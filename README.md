@@ -26,6 +26,7 @@
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
+[Db Schema](https://whimsical.com/dq-store-db-JwcH9kZqqfW4CsndBPS1Wp)
 ## Installation
 
 ```bash
